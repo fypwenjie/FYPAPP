@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
+   /* signingConfigs {
         config {
             keyAlias 'FYPWENJIE'
             keyPassword 'FYPWENJIE'
             storeFile file('C:/Users/VINTEDGE/Downloads/FYPAPP/fypwenjie.jks')
             storePassword 'fypwenjie'
         }
-    }
+    }*/
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
