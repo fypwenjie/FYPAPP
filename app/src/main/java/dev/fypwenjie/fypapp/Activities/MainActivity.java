@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,12 +19,15 @@ import com.microsoft.appcenter.crashes.Crashes;
 import java.util.HashMap;
 
 import dev.fypwenjie.fypapp.Domain.Account;
+import dev.fypwenjie.fypapp.Fragment.NavigationDrawerFragment;
 import dev.fypwenjie.fypapp.R;
 import dev.fypwenjie.fypapp.RequestHandler;
 import dev.fypwenjie.fypapp.Util.Util;
 
 public class MainActivity extends AppCompatActivity {
     Button btn_test;
+    private Toolbar toolbar;
+
     private Account account;
     private static final String PUSH_URL = "https://fyp-wenjie.000webhostapp.com/login/push";
     final static String KEY_PARAM1 = "param1";
@@ -42,10 +46,12 @@ public class MainActivity extends AppCompatActivity {
             Util.longToast(this, "No Internet Access!");
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
+        NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
     }
 

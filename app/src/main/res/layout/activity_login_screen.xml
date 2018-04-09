@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:background="#005066"
     android:fitsSystemWindows="true"
-    tools:context="com.beta.ideazes.tcfoo.ideazes.Activity.LoginScreen">
+    tools:context="dev.fypwenjie.fypapp.Activities.LoginScreen">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -20,44 +20,18 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-import static android.content.Context.MODE_PRIVATE;
-
-
-
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.beta.ideazes.tcfoo.ideazes.Activity.LoginScreen;
-import com.beta.ideazes.tcfoo.ideazes.Activity.QrScanner;
-import com.beta.ideazes.tcfoo.ideazes.Adapter.CategoryAdapter;
-import com.beta.ideazes.tcfoo.ideazes.Data.Category;
-import dev.fypwenjie.fypapp.R;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
+
+import dev.fypwenjie.fypapp.Activities.LoginScreen;
+import dev.fypwenjie.fypapp.Activities.QrScanner;
+import dev.fypwenjie.fypapp.Adapters.StoreAdapter;
+import dev.fypwenjie.fypapp.Domain.Store;
+import dev.fypwenjie.fypapp.R;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -72,8 +46,8 @@ public class NavigationDrawerFragment extends Fragment {
     private static final String OPERATION_NAME = "GetICS_Categories";
     private static final String WSDL_TARGET_NAMESPACE = "http://tempuri.org/";
     private static final String SOAP_ADDRESS = "http://www.ideazes.com/IdeazesWCF/IdeazesServices.svc";
-    ArrayList<Category> categories = new ArrayList<Category>();
-    Category category = new Category();
+    ArrayList<Store> categories = new ArrayList<Store>();
+    Store store = new Store();
     ProgressDialog dialog;
     String TAG = "Response";
     RecyclerView newCategory_list;
@@ -218,10 +192,10 @@ public class NavigationDrawerFragment extends Fragment {
 
             for (int i = 0; i < response.getPropertyCount(); i++) {
                 SoapObject pii = (SoapObject) response.getProperty(i);
-                category.setCategory(pii.getProperty("CategoryDesc").toString());
-                category.setCategoryID(pii.getProperty("CategoryID").toString());
+                store.setCategory(pii.getProperty("CategoryDesc").toString());
+                store.setCategoryID(pii.getProperty("CategoryID").toString());
 
-                categories.add(category.copy());
+                categories.add(store.copy());
             }
 
         } catch (Exception exception) {
@@ -250,10 +224,10 @@ public class NavigationDrawerFragment extends Fragment {
         @Override
         protected void onPostExecute(Void result) {
 
-            CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity(), categories);
+            StoreAdapter storeAdapter = new StoreAdapter(getActivity(), categories);
             Log.i("categories screen s", String.valueOf(categories.size()));
 
-            newCategory_list.setAdapter(categoryAdapter);
+            newCategory_list.setAdapter(storeAdapter);
             dialog.cancel();
             Log.i(TAG, "onPostExecute");
         }
