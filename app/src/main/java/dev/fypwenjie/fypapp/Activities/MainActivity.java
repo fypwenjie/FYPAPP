@@ -1,13 +1,18 @@
 package dev.fypwenjie.fypapp.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -20,9 +25,16 @@ import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.fypwenjie.fypapp.Adapters.StoreAdapter;
 import dev.fypwenjie.fypapp.Domain.Account;
+import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.Fragment.NavigationDrawerFragment;
 import dev.fypwenjie.fypapp.R;
 import dev.fypwenjie.fypapp.RequestHandler;
@@ -33,10 +45,27 @@ import static dev.fypwenjie.fypapp.R.id.slider;
 public class MainActivity extends AppCompatActivity implements BaseSliderView.OnSliderClickListener  {
     Button btn_test;
     private Toolbar toolbar;
+    ProgressDialog dialog;
+    RecyclerView newStore_list;
+
+    ArrayList<Store> stores = new ArrayList<Store>();
+    Store store = new Store();
 
     private Account account;
-    private static final String PUSH_URL = "https://fyp-wenjie.000webhostapp.com/login/push";
+    private static final String GET_STORE_URL = "https://fyp-wenjie.000webhostapp.com/store/store_list";
     final static String KEY_PARAM1 = "param1";
+
+    final static String ACCOUNT_TABLE = "account";
+    final static String COLUMN_ACC_ID = "acc_id";
+    final static String COLUMN_CUST_ID = "cust_id";
+    final static String COLUMN_USER_NAME = "user_name";
+    final static String COLUMN_ACC_PASSWORD = "acc_password";
+    final static String COLUMN_ACC_SECURITYCODE = "acc_security_code";
+    final static String COLUMN_PROFILE_IMAGE_PATH = "profile_image_path";
+    final static String COLUMN_ACC_BALANCE = "acc_balance";
+    final static String COLUMN_REGISTER_DATE = "register_date";
+    final static String KEY_RESPONSE = "response";
+
     final static String JSON_ARRAY = "result";
     private SliderLayout mDemoSlider;
 
@@ -89,6 +118,12 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         mDemoSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
         mDemoSlider.setDuration(4000);
 
+        newStore_list = (RecyclerView) findViewById(R.id.newCoupon_list);
+        newStore_list.setLayoutManager(new GridLayoutManager(MainActivity.this, 1));
+        newStore_list.setNestedScrollingEnabled(false);
+
+        new Store_list("0").execute();
+
     }
 
     @Override
@@ -120,74 +155,62 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         return super.onOptionsItemSelected(item);
     }
 
-    public class Push extends AsyncTask<String, Void, String> {
+    public class Store_list extends AsyncTask<String, Void, String> {
         String param1;
         RequestHandler rh = new RequestHandler();
 
-        public Push(String param1) {
+        public Store_list(String param1) {
             this.param1 = param1;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            dialog = new ProgressDialog(MainActivity.this);
+            dialog.setCancelable(false);
+            dialog.setMessage("Loading...");
+            dialog.show();
+            Log.i("tag", "onPreExecute");
         }
 
         @Override
         protected void onPostExecute(String json) {
             super.onPostExecute(json);
-//
-//            try {
-//
-//                JSONArray jsonArray = new JSONObject(json).getJSONArray(JSON_ARRAY);
-//                JSONObject jsonData = jsonArray.getJSONObject(0);
-//
-//                accounts = new Accounts();
-//
-//
-//                // These fields may not null
-//                accounts.setAcc_id(jsonData.getInt(COLUMN_ACC_ID));
-//                accounts.setCust_id(jsonData.getString(COLUMN_CUST_ID));
-//                accounts.setUser_name(jsonData.getString(COLUMN_USER_NAME));
-//                accounts.setAcc_password(jsonData.getString(COLUMN_ACC_PASSWORD));
-//                accounts.setAcc_security_code(jsonData.getString(COLUMN_ACC_SECURITYCODE));
-//                accounts.setProfile_image_path(jsonData.getString(COLUMN_PROFILE_IMAGE_PATH));
-//                accounts.setAcc_balance(jsonData.getDouble(COLUMN_ACC_BALANCE));
-//                accounts.setRegister_date(mySqlDateFormat.parse(jsonData.getString(COLUMN_REGISTER_DATE)));
-//                accounts.setLogin_response((jsonData.getInt(KEY_RESPONSE)));
-//                //Log.d("LoginActivity", "response : " + jsonObject.getInt("response")+"");
-//
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//
-//            switch (response) {
-//                case 0:
-//                    longToast(LoginActivity.this, "No Connection! Please Try Again Later.");
-//                    break;
-//                case 1:
-//                    shortToast(LoginActivity.this, "Login Successful");
-//                    Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//                    finish();
-//                    break;
-//                case 2:
-//                    shortToast(LoginActivity.this, "Wrong Username or Password");
-//                    editTextUsername.requestFocus();
-//                    editTextPassword.setText("");
-//                    break;
-//            }
+
+            try {
+
+                JSONArray jsonArray = new JSONArray(json);
+
+                for(int i=0; i < jsonArray.length(); i++) {
+                    JSONObject jsonobject = jsonArray.getJSONObject(i);
+                    store.setStore_name(jsonobject.getString("s_name"));
+                    store.setStore_id(jsonobject.getString("id"));
+
+                    stores.add(store.copy());
+                }
+
+                StoreAdapter storeAdapter = new StoreAdapter(MainActivity.this, stores);
+                Log.i("home screen s", String.valueOf(stores.size()));
+
+
+                newStore_list.setAdapter(storeAdapter);
+                dialog.cancel();
+                Log.i("tag", "onPostExecute");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         }
 
         @Override
         protected String doInBackground(String... strings) {
             HashMap<String, String> information = new HashMap<>();
             information.put(KEY_PARAM1, param1);
-            return rh.sendPostRequest(PUSH_URL, information);
+            return rh.sendPostRequest(GET_STORE_URL, information);
         }
     }
 }

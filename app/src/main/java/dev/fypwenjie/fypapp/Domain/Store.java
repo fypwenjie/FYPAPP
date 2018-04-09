@@ -6,36 +6,36 @@ package dev.fypwenjie.fypapp.Domain;
 
 public class Store {
 
-    public String Category;
-    public String CategoryID;
+    public String Store_name;
+    public String Store_id;
 
-    public Store(String category, String categoryID) {
-        Category = category;
-        CategoryID = categoryID;
+    public Store(String store_name, String store_id) {
+        Store_name = store_name;
+        Store_id = store_id;
     }
 
     public Store() {
 
     }
 
-    public String getCategoryID() {
-        return CategoryID;
+    public String getStore_name() {
+        return Store_name;
     }
 
-    public void setCategoryID(String categoryID) {
-        CategoryID = categoryID;
+    public void setStore_name(String store_name) {
+        Store_name = store_name;
     }
 
-    public String getCategory() {
-        return Category;
+    public String getStore_id() {
+        return Store_id;
     }
 
-    public void setCategory(String category) {
-        Category = category;
+    public void setStore_id(String store_id) {
+        Store_id = store_id;
     }
 
     public Store copy() {
-        Store tmp = new Store(this.Category, this.CategoryID);
+        Store tmp = new Store(this.Store_name, this.Store_id);
         return tmp;
     }
 }

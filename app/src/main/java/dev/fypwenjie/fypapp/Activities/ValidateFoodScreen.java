@@ -53,8 +53,6 @@ public class ValidateFoodScreen extends AppCompatActivity {
         setContentView(R.layout.activity_validate_coupon_screen);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         user_id = getIntent().getStringExtra("UserID");
         coupon_code = getIntent().getStringExtra("CouponCode");

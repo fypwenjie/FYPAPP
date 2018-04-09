@@ -49,13 +49,13 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     @Override
     public void onBindViewHolder(StoreViewHolder holder, int position) {
         final Store stores = store.get(position);
-        holder.categoryTitle.setText(stores.getCategory().toUpperCase());
+        holder.categoryTitle.setText(stores.getStore_name().toUpperCase());
         holder.categoryTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, StoreScreen.class);
-                i.putExtra("categoryDesc", stores.getCategory());
-                i.putExtra("categoryID", stores.getCategoryID());
+                i.putExtra("categoryDesc", stores.getStore_name());
+                i.putExtra("categoryID", stores.getStore_id());
                 context.startActivity(i);
             }
         });
