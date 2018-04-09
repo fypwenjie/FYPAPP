@@ -4,13 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,16 +18,10 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
 import java.util.ArrayList;
 
 import dev.fypwenjie.fypapp.Activities.LoginScreen;
 import dev.fypwenjie.fypapp.Activities.QrScanner;
-import dev.fypwenjie.fypapp.Adapters.StoreAdapter;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
 
@@ -129,13 +121,13 @@ public class NavigationDrawerFragment extends Fragment {
             txtCustName.setText((cust_first_name != null && cust_last_name != null) ? String.valueOf(cust_first_name + " " + cust_last_name) : "");
         }
 
-        newCategory_list = (RecyclerView) view.findViewById(R.id.newCategory_list);
+  /*      newCategory_list = (RecyclerView) view.findViewById(R.id.newCategory_list);
         newCategory_list.setLayoutManager(new LinearLayoutManager(getActivity()));
         newCategory_list.setNestedScrollingEnabled(false);
-
-        AsyncCallWS task = new AsyncCallWS();
+*/
+       /* AsyncCallWS task = new AsyncCallWS();
         task.execute();
-
+*/
         return view;
     }
 
@@ -171,7 +163,7 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
     }
-
+/*
     public void calculate() {
         SoapObject request = new SoapObject(WSDL_TARGET_NAMESPACE,
                 OPERATION_NAME);
@@ -201,9 +193,9 @@ public class NavigationDrawerFragment extends Fragment {
         } catch (Exception exception) {
             Log.i(TAG, exception.toString());
         }
-    }
+    }*/
 
-    private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
+    /*private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -233,6 +225,6 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
     }
-
+*/
 
 }

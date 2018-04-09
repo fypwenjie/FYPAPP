@@ -12,6 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
@@ -24,7 +28,9 @@ import dev.fypwenjie.fypapp.R;
 import dev.fypwenjie.fypapp.RequestHandler;
 import dev.fypwenjie.fypapp.Util.Util;
 
-public class MainActivity extends AppCompatActivity {
+import static dev.fypwenjie.fypapp.R.id.slider;
+
+public class MainActivity extends AppCompatActivity implements BaseSliderView.OnSliderClickListener  {
     Button btn_test;
     private Toolbar toolbar;
 
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String PUSH_URL = "https://fyp-wenjie.000webhostapp.com/login/push";
     final static String KEY_PARAM1 = "param1";
     final static String JSON_ARRAY = "result";
+    private SliderLayout mDemoSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,43 @@ public class MainActivity extends AppCompatActivity {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
+        mDemoSlider = (SliderLayout) findViewById(slider);
+      /*  HashMap<String, String> url_maps = new HashMap<String, String>();
+        url_maps.put("img1", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+        url_maps.put("img2", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+        url_maps.put("img3", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+        url_maps.put("img4", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");*/
+
+        HashMap<String, Integer> file_maps = new HashMap<String, Integer>();
+        file_maps.put("Hannibal", R.drawable.vocal);
+        file_maps.put("Big Bang Theory", R.drawable.aquarium);
+        file_maps.put("House of Cards", R.drawable.watermelon);
+
+        for (String name : file_maps.keySet()) {
+            DefaultSliderView defaultSliderView = new DefaultSliderView(this);
+            // initialize a SliderLayout
+            defaultSliderView
+                    .image(file_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.CenterCrop);
+
+            //add your extra information
+            defaultSliderView.bundle(new Bundle());
+            defaultSliderView.getBundle()
+                    .putString("extra", name);
+
+            mDemoSlider.addSlider(defaultSliderView);
+        }
+        mDemoSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
+        mDemoSlider.setDuration(4000);
+
     }
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
