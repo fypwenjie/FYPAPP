@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ededed"
-    tools:context="com.beta.ideazes.tcfoo.ideazes.Activity.ValidateCouponScreen">
+    tools:context="dev.fypwenjie.fypapp.Activities.ValidateFoodScreen">
 
     <include
         android:id="@+id/app_bar"
