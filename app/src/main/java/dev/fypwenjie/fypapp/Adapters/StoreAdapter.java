@@ -3,20 +3,28 @@ package dev.fypwenjie.fypapp.Adapters;
 /**
  * Created by VINTEDGE on 9/4/2018.
  */
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
 
 import dev.fypwenjie.fypapp.Activities.StoreScreen;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
+import dev.fypwenjie.fypapp.Util.GlobalValue;
 
 /**
  * Created by VINTEDGE on 21/2/2017.
@@ -40,17 +48,29 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
 
     @Override
     public StoreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_category, parent, false);
+        View view = inflater.inflate(R.layout.list_store, parent, false);
         StoreViewHolder holder = new StoreViewHolder(view);
         return holder;
     }
 
 
     @Override
-    public void onBindViewHolder(StoreViewHolder holder, int position) {
+    public void onBindViewHolder(final StoreViewHolder holder, int position) {
         final Store stores = store.get(position);
-        holder.categoryTitle.setText(stores.getStore_name().toUpperCase());
-        holder.categoryTitle.setOnClickListener(new View.OnClickListener() {
+        String banner_url = GlobalValue.Domain_name+stores.getStore_banner();
+        Log.i("banner url", banner_url);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.loadImage(banner_url, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                // Do whatever you want with Bitmap
+                holder.store_Img.setImageBitmap(loadedImage);
+                //Bitmap.createScaledBitmap(loadedImage,holder.store_Img.getMaxWidth(),holder.store_Img.getMaxHeight(),false)
+            }
+        });
+        holder.store_title.setText(stores.getStore_name().toUpperCase());
+        holder.store_category.setText(stores.getStore_category().toUpperCase());
+        holder.store_category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, StoreScreen.class);
@@ -67,11 +87,15 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     }
 
     class StoreViewHolder extends RecyclerView.ViewHolder {
-        TextView categoryTitle;
+        TextView store_title;
+        TextView store_category;
+        ImageView store_Img;
 
         public StoreViewHolder(View itemView) {
             super(itemView);
-            categoryTitle = (TextView) itemView.findViewById(R.id.title);
+            store_Img = (ImageView) itemView.findViewById(R.id.image_store);
+            store_title = (TextView) itemView.findViewById(R.id.title_store);
+            store_category = (TextView) itemView.findViewById(R.id.title_category);
         }
     }
 

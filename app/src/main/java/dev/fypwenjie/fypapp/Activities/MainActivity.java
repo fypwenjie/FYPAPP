@@ -24,11 +24,17 @@ import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -81,6 +87,19 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
         if (info == null) {
             Util.longToast(this, "No Internet Access!");
         }
+        File cacheDir = StorageUtils.getOwnCacheDirectory(this, "cache_folder");
+        ImageLoader imageLoader = ImageLoader.getInstance();
+
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.writeDebugLogs(); // Remove for release app
+
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config.build());
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
@@ -185,6 +204,8 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                     JSONObject jsonobject = jsonArray.getJSONObject(i);
                     store.setStore_name(jsonobject.getString("s_name"));
                     store.setStore_id(jsonobject.getString("id"));
+                    store.setStore_banner(jsonobject.getString("s_image"));
+                    store.setStore_category(jsonobject.getString("s_type"));
 
                     stores.add(store.copy());
                 }

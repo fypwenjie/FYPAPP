@@ -5,20 +5,20 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/item_coupon"
+        android:id="@+id/item_store"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_margin="10dp"
-        android:background="#fcfcfc"
+        android:background="@android:color/white"
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/image_coupon"
+            android:id="@+id/image_store"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:adjustViewBounds="true"
             android:background="@android:color/white"
-            android:scaleType="fitCenter" />
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,10 +27,10 @@
             android:paddingTop="10dp">
 
             <TextView
-                android:id="@+id/title_coupon"
+                android:id="@+id/title_store"
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textColor="#646464"
                 android:textStyle="bold" />
 
@@ -41,36 +41,16 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/coupon_price"
+                    android:id="@+id/title_category"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:paddingLeft="5dp"
                     android:textColor="#646464" />
 
-                <TextView
-                    android:id="@+id/desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:paddingLeft="10dp"
-                    android:textColor="#646464"
-                    android:textStyle="bold" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/coupon_discount"
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:textAlignment="center"
-                    android:textColor="#0088ae"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

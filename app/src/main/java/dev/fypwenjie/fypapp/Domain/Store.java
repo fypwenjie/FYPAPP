@@ -8,14 +8,34 @@ public class Store {
 
     public String Store_name;
     public String Store_id;
+    public String Store_category;
+    public String Store_banner;
 
-    public Store(String store_name, String store_id) {
+    public Store(String store_name, String store_id, String store_category, String store_banner ) {
         Store_name = store_name;
         Store_id = store_id;
+        Store_category = store_category;
+        Store_banner = store_banner;
     }
 
     public Store() {
 
+    }
+
+    public String getStore_banner() {
+        return Store_banner;
+    }
+
+    public void setStore_banner(String store_banner) {
+        Store_banner = store_banner;
+    }
+
+    public String getStore_category() {
+        return Store_category;
+    }
+
+    public void setStore_category(String store_category) {
+        Store_category = store_category;
     }
 
     public String getStore_name() {
@@ -35,7 +55,7 @@ public class Store {
     }
 
     public Store copy() {
-        Store tmp = new Store(this.Store_name, this.Store_id);
+        Store tmp = new Store(this.Store_name, this.Store_id, this.Store_category, this.Store_banner);
         return tmp;
     }
 }

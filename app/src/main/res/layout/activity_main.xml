@@ -43,7 +43,7 @@ tools:context="dev.fypwenjie.fypapp.Activities.MainActivity">
                     <com.daimajia.slider.library.SliderLayout
                         android:id="@+id/slider"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="180dp"
                         custom:auto_cycle="true"
                         custom:indicator_visibility="visible" />
 
@@ -74,7 +74,7 @@ tools:context="dev.fypwenjie.fypapp.Activities.MainActivity">
                 android:id="@+id/ttl_new_coupons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ededed">
+                android:background="@android:color/white">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -96,7 +96,7 @@ tools:context="dev.fypwenjie.fypapp.Activities.MainActivity">
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ededed"
+            android:background="@android:color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
