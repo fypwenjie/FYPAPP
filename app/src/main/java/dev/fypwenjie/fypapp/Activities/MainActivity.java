@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
                 for(int i=0; i < jsonArray.length(); i++) {
                     JSONObject jsonobject = jsonArray.getJSONObject(i);
                     store.setStore_name(jsonobject.getString("s_name"));
-                    store.setStore_id(jsonobject.getString("id"));
+                    store.setStore_id( String.valueOf(jsonobject.getInt("id")));
                     store.setStore_banner(jsonobject.getString("s_image"));
                     store.setStore_category(jsonobject.getString("s_type"));
 
