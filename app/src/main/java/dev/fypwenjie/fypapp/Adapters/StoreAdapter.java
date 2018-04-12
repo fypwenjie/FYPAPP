@@ -8,12 +8,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -70,7 +72,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         });
         holder.store_title.setText(stores.getStore_name().toUpperCase());
         holder.store_category.setText(stores.getStore_category().toUpperCase());
-        holder.store_category.setOnClickListener(new View.OnClickListener() {
+        holder.store_container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, StoreScreen.class);
@@ -89,12 +91,17 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     class StoreViewHolder extends RecyclerView.ViewHolder {
         TextView store_title;
         TextView store_category;
+        LinearLayout store_container;
         ImageView store_Img;
 
         public StoreViewHolder(View itemView) {
             super(itemView);
             store_Img = (ImageView) itemView.findViewById(R.id.image_store);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                store_Img.setImageDrawable(context.getDrawable( R.drawable.loadingdots));
+            }
             store_title = (TextView) itemView.findViewById(R.id.title_store);
+            store_container = (LinearLayout) itemView.findViewById(R.id.item_store);
             store_category = (TextView) itemView.findViewById(R.id.title_category);
         }
     }

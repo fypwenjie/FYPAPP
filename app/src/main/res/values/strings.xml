@@ -6,6 +6,9 @@
         <string name="drawer_open">Open</string>
         <string name="drawer_close">Close</string>
         <string name="btn_get">Get Now</string>
+        <string name="publish_date">202911122</string>
+        <string name="recent_news">asdasdqd as dasd asd as dasd asd asd asd asdasd asd asdasdasd saf asfasfjasl asdkjsadl asjdl sad</string>
+        <string name="in_news">asdasdqd as dasd asd as dasd asd asd asd asdasd asd asdasdasd saf asfasfjasl asdkjsadl asjdl sad</string>
         <string name="btn_more_info">More Info</string>
         <string-array name="cust_info">
             <item>UserID</item>
