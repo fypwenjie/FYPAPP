@@ -138,13 +138,16 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
             int translation = view.getChildAt(0).getHeight() + view.getChildAt(0).getTop();
 
             // if we scrolled more than 16dps, we hide the content and display the title
-            if (view.getChildAt(0).getTop() < -dpToPx(16)) {
+            if (view.getChildAt(0).getTop() < -dpToPx(25)) {
                 toggleHeader(false, false);
+                mToolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
             } else {
                 toggleHeader(true, true);
+                mToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             }
         } else {
             toggleHeader(false, false);
+            mToolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
         }
 
         // if the device uses Lollipop or above, we update the ToolBar's elevation

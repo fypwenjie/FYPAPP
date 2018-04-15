@@ -98,7 +98,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
             super(itemView);
             store_Img = (ImageView) itemView.findViewById(R.id.image_store);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                store_Img.setImageDrawable(context.getDrawable( R.drawable.loadingdots));
+                store_Img.setImageDrawable(context.getDrawable( R.drawable.no_image));
             }
             store_title = (TextView) itemView.findViewById(R.id.title_store);
             store_container = (LinearLayout) itemView.findViewById(R.id.item_store);
