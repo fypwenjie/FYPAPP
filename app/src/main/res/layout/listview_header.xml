@@ -63,6 +63,7 @@
             android:layout_height="100px"
             android:paddingLeft="50px"
             android:text="@string/store_food_title"
+            android:id="@+id/title_food_menu"
             android:textColor="@android:color/black"
             android:gravity="center_vertical"
             android:background="#fafafa"

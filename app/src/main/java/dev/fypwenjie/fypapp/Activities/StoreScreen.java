@@ -7,14 +7,13 @@ package dev.fypwenjie.fypapp.Activities;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,65 +22,43 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.daimajia.slider.library.SliderLayout;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import dev.fypwenjie.fypapp.Adapters.FoodAdapter;
 import dev.fypwenjie.fypapp.Domain.Food;
+import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
+import dev.fypwenjie.fypapp.RequestHandler;
+
+import static dev.fypwenjie.fypapp.Activities.MainActivity.KEY_PARAM1;
 
 public class StoreScreen extends AppCompatActivity implements AbsListView.OnScrollListener {
-    //Testing
-    private static final String SOAP_ACTION = "http://tempuri.org/IService1/GetICS_CategoryCoupons";
-    private static final String OPERATION_NAME = "GetICS_CategoryCoupons";
-    private static final String WSDL_TARGET_NAMESPACE = "http://tempuri.org/";
-    private static final String SOAP_ADDRESS = "http://www.ideazes.com/IdeazesWCF/IdeazesServices.svc";
+
     ArrayList<Food> foods = new ArrayList<Food>();
+    ArrayList<Store> stores = new ArrayList<Store>();
     Food food = new Food();
+    Store store = new Store();
     String categoriesTitle;
-    String categoriesID;
-    // GridView newCounpons_list;
-    RecyclerView newCounpons_list;
+    ListView listView;
+    String store_id;
     ProgressDialog dialog;
     String TAG = "Response";
     TextView txt_store_name;
     TextView txt_store_cat;
-    private SliderLayout mDemoSlider;
-    private Toolbar toolbar;
 
-    final static String[] DUMMY_DATA = {
-            "France",
-            "Sweden",
-            "Germany",
-            "USA",
-            "Portugal",
-            "The Netherlands",
-            "Belgium",
-            "Spain",
-            "United Kingdom",
-            "Mexico",
-            "Finland",
-            "Norway",
-            "Italy",
-            "Ireland",
-            "Brazil",
-            "Japan"
-    };
-
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
     View mContainerHeader;
     FloatingActionButton mFab;
 
+    private static final String GET_STORE_URL = "https://fyp-wenjie.000webhostapp.com/store/store_list";
     ObjectAnimator fade;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +70,9 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getIntent().getStringExtra("store_name"));
 
-        ListView listView = (ListView)findViewById(R.id.listview);
+        listView = (ListView)findViewById(R.id.listview);
 
+        store_id = getIntent().getStringExtra("store_id");
 
         // Inflate the header view and attach it to the ListView
         View headerView = LayoutInflater.from(this)
@@ -114,11 +92,7 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
         fade.setDuration(400);
 
         listView.setOnScrollListener(this);
-        listView.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1,
-                DUMMY_DATA));
-        //Navigation drawer
-
+        new Food_list("0").execute();
     }
 
 
@@ -145,7 +119,7 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
             int translation = view.getChildAt(0).getHeight() + view.getChildAt(0).getTop();
 
             // if we scrolled more than 16dps, we hide the content and display the title
-            if (view.getChildAt(0).getTop() < -dpToPx(25)) {
+            if (view.getChildAt(0).getTop() < -dpToPx(100)) {
                 toggleHeader(false, false);
                 mToolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
             } else {
@@ -213,81 +187,64 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
-    public void calculate() {
-        SoapObject request = new SoapObject(WSDL_TARGET_NAMESPACE,
-                OPERATION_NAME);
+    public class Food_list extends AsyncTask<String, Void, String> {
+        String param1;
+        RequestHandler rh = new RequestHandler();
 
-        request.addProperty("CategoryID", categoriesID);
-        request.addProperty("StartRowIndex", "1");
-        request.addProperty("MaxRows", "99");
-        request.addProperty("OrderBy", "CouponID");
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.dotNet = true;
-
-        envelope.setOutputSoapObject(request);
-
-        HttpTransportSE httpTransport = new HttpTransportSE(SOAP_ADDRESS);
-
-        try {
-            httpTransport.call(SOAP_ACTION, envelope);
-            SoapObject response = (SoapObject) envelope.getResponse();
-
-            Log.i("Rest", response.toString());
-
-            for (int i = 0; i < response.getPropertyCount(); i++) {
-                SoapObject pii = (SoapObject) response.getProperty(i);
-                food.setCProductDesc(pii.getProperty("CProductDesc").toString());
-                food.setCouponID(pii.getProperty("CouponID").toString());
-                food.setDiscAmount(pii.getProperty("DiscAmount").toString());
-                food.setUnitPrice(pii.getProperty("UnitPrice").toString());
-                food.setUserID(pii.getProperty("UserID").toString());
-                byte[] bloc = Base64.decode(pii.getProperty("CouponImage").toString(), Base64.DEFAULT);
-                food.setProductimage(bloc);
-
-                foods.add(food.copy());
-            }
-
-        } catch (Exception exception)
-
-        {
-            Log.i(TAG, exception.toString());
+        public Food_list(String param1) {
+            this.param1 = param1;
         }
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
-
-    private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
+            super.onPreExecute();
             dialog = new ProgressDialog(StoreScreen.this);
-            dialog.setCancelable(true);
+            dialog.setCancelable(false);
             dialog.setMessage("Loading...");
             dialog.show();
-            Log.i(TAG, "onPreExecute");
+            Log.i("tag", "onPreExecute");
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            Log.i(TAG, "doInBackground");
-            calculate();
-            return null;
+        protected void onPostExecute(String json) {
+            super.onPostExecute(json);
+
+            try {
+
+                JSONArray jsonArray = new JSONArray(json);
+
+                for(int i=0; i < jsonArray.length(); i++) {
+                    JSONObject jsonobject = jsonArray.getJSONObject(i);
+                    store.setStore_name(jsonobject.getString("s_name"));
+                    store.setStore_id( String.valueOf(jsonobject.getInt("id")));
+                    store.setStore_banner(jsonobject.getString("s_image"));
+                    store.setStore_category(jsonobject.getString("s_type"));
+
+                    stores.add(store.copy());
+                }
+
+                FoodAdapter foodAdapter = new FoodAdapter(stores, StoreScreen.this);
+
+
+                listView.setAdapter(foodAdapter);
+                dialog.cancel();
+                Log.i("tag", "onPostExecute");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            FoodAdapter couponAdapter = new FoodAdapter(StoreScreen.this, foods);
-            Log.i("Category screen s", String.valueOf(foods.size()));
-
-            newCounpons_list.setAdapter(couponAdapter);
-            dialog.cancel();
-            Log.i(TAG, "onPostExecute");
+        protected String doInBackground(String... strings) {
+            HashMap<String, String> information = new HashMap<>();
+            information.put(KEY_PARAM1, param1);
+            return rh.sendPostRequest(GET_STORE_URL, information);
         }
-
     }
+
 }
