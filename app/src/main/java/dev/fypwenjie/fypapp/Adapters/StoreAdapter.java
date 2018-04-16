@@ -76,8 +76,9 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, StoreScreen.class);
-                i.putExtra("categoryDesc", stores.getStore_name());
-                i.putExtra("categoryID", stores.getStore_id());
+                i.putExtra("store_name", stores.getStore_name());
+                i.putExtra("store_cat", stores.getStore_category());
+                i.putExtra("store_id", stores.getStore_id());
                 context.startActivity(i);
             }
         });

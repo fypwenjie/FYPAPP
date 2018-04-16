@@ -19,15 +19,15 @@
                 android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/img"
+                android:id="@+id/img_store"
                 android:layout_width="match_parent"
                 android:layout_height="400px"
                 android:scaleType="centerCrop"
-                android:src="@drawable/aquarium" />
+                android:src="@drawable/no_image" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="100px"
-                android:background="#f2f2f2"
+                android:background="#fafafa"
                 />
             </LinearLayout>
             <LinearLayout
@@ -46,18 +46,26 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
+                    android:id="@+id/txt_store_name"
                     android:textColor="@android:color/black"
                     android:textSize="24sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/publish_date"
+                    android:id="@+id/txt_store_cat"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
             </LinearLayout>
         </FrameLayout>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:paddingLeft="50px"
+            android:text="@string/store_food_title"
+            android:textColor="@android:color/black"
+            android:gravity="center_vertical"
+            android:background="#fafafa"
+            android:textSize="18sp" />
     </LinearLayout>
 </FrameLayout>

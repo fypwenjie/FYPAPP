@@ -54,7 +54,8 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
     RecyclerView newCounpons_list;
     ProgressDialog dialog;
     String TAG = "Response";
-    TextView txtTitle;
+    TextView txt_store_name;
+    TextView txt_store_cat;
     private SliderLayout mDemoSlider;
     private Toolbar toolbar;
 
@@ -90,7 +91,7 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getIntent().getStringExtra("categoryDesc"));
+        getSupportActionBar().setTitle(getIntent().getStringExtra("store_name"));
 
         ListView listView = (ListView)findViewById(R.id.listview);
 
@@ -100,6 +101,12 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
                 .inflate(R.layout.listview_header, listView, false);
         mContainerHeader = headerView.findViewById(R.id.container);
         listView.addHeaderView(headerView);
+
+        txt_store_name = headerView.findViewById(R.id.txt_store_name);
+        txt_store_name.setText(getIntent().getStringExtra("store_name"));
+
+        txt_store_cat = headerView.findViewById(R.id.txt_store_cat);
+        txt_store_cat.setText(getIntent().getStringExtra("store_cat"));
 
         // prepare the fade in/out animator
         fade =  ObjectAnimator.ofFloat(mContainerHeader, "alpha", 0f, 1f);
