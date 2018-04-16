@@ -16,15 +16,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import dev.fypwenjie.fypapp.Domain.Food;
-import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
 
 /**
  * Created by VINTEDGE on 21/2/2017.
  */
-public class FoodAdapter extends ArrayAdapter<Store> implements View.OnClickListener{
+public class FoodAdapter extends ArrayAdapter<Food> implements View.OnClickListener{
 
-    private ArrayList<Store> dataSet;
+    private ArrayList<Food> dataSet;
     Context mContext;
 
     // View lookup cache
@@ -33,10 +32,11 @@ public class FoodAdapter extends ArrayAdapter<Store> implements View.OnClickList
         TextView foodDesc;
         TextView foodPrice;
         LinearLayout foodLayout;
+        LinearLayout imgWrapper;
         ImageView foodImg;
     }
 
-    public FoodAdapter(ArrayList<Store> data, Context context) {
+    public FoodAdapter(ArrayList<Food> data, Context context) {
         super(context, R.layout.list_food, data);
         this.dataSet = data;
         this.mContext=context;
@@ -63,7 +63,7 @@ public class FoodAdapter extends ArrayAdapter<Store> implements View.OnClickList
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Store store = getItem(position);
+        Food food = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -79,6 +79,7 @@ public class FoodAdapter extends ArrayAdapter<Store> implements View.OnClickList
             viewHolder.foodPrice = (TextView) convertView.findViewById(R.id.price_food);
             viewHolder.foodLayout = (LinearLayout) convertView.findViewById(R.id.food_layout);
             viewHolder.foodImg = (ImageView) convertView.findViewById(R.id.food_img);
+            viewHolder.imgWrapper = (LinearLayout) convertView.findViewById(R.id.img_wrapper);
 
             result=convertView;
 
@@ -90,8 +91,14 @@ public class FoodAdapter extends ArrayAdapter<Store> implements View.OnClickList
 
 
         lastPosition = position;
-        viewHolder.foodTitle.setText(store.getStore_name());
-        viewHolder.foodDesc.setText(store.getStore_category());
+        viewHolder.foodTitle.setText((food.getFood_name() != null) ?  food.getFood_name() : "");
+        viewHolder.foodDesc.setText((food.getFood_desc() != null) ?   food.getFood_desc() : "");
+        viewHolder.foodPrice.setText((food.getFood_price() != null) ?  food.getFood_price() : "");
+        if(food.getFood_banner() == null) {
+            LinearLayout.LayoutParams lParams = (LinearLayout.LayoutParams) viewHolder.imgWrapper.getLayoutParams(); //or create new LayoutParams...
+            lParams.weight = 0.0f;
+            viewHolder.imgWrapper.setLayoutParams(lParams);
+        }
 
         // Return the completed view to render on screen
         return convertView;

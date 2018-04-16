@@ -4,37 +4,21 @@ package dev.fypwenjie.fypapp.Domain;
  * Created by VINTEDGE on 9/4/2018.
  */
 public class Food {
-    public String CouponID;
-    public String CProductDesc;
-    public byte[] Productimage;
-    public String DiscAmount;
-    public String UnitPrice;
-    public String UserID;
-    public String TotalCoupon;
-    public String AvailableCoupon;
-    public String ValidFrom;
-    public String ValidTo;
-    public String CouponDesc;
+    public String Food_id;
+    public String Food_name;
+    public String Food_desc;
+    public String Food_banner;
+    public String Food_price;
+    public String Food_category;
 
-    public Food(byte[] productimage, String couponID, String CProductDesc, String discAmount, String unitPrice,
-                  String userID,
-                  String TotalCoupon,
-                  String AvailableCoupon,
-                  String ValidFrom,
-                  String ValidTo,
-                  String CouponDesc) {
+    public Food(String Food_id, String Food_name,String Food_desc, String Food_banner, String Food_price, String Food_category) {
 
-        this.Productimage = productimage;
-        this.CouponID = couponID;
-        this.CProductDesc = CProductDesc;
-        this.DiscAmount = discAmount;
-        this.UnitPrice = unitPrice;
-        this.UserID = userID;
-        this.TotalCoupon = TotalCoupon;
-        this.AvailableCoupon = AvailableCoupon;
-        this.ValidFrom = ValidFrom;
-        this.ValidTo = ValidTo;
-        this.CouponDesc = CouponDesc;
+        this.Food_id = Food_id;
+        this.Food_name = Food_name;
+        this.Food_desc = Food_desc;
+        this.Food_banner = Food_banner;
+        this.Food_price = Food_price;
+        this.Food_category = Food_category;
     }
 
     public Food() {
@@ -42,107 +26,62 @@ public class Food {
     }
 
     public Food copy() {
-        Food tmp = new Food(this.Productimage,
-                this.CouponID,
-                this.CProductDesc,
-                this.DiscAmount,
-                this.UnitPrice,
-                this.UserID,
-                this.TotalCoupon,
-                this.AvailableCoupon,
-                this.ValidFrom,
-                this.ValidTo,
-                this.CouponDesc
+        Food tmp = new Food(this.Food_id,
+                this.Food_name,
+                this.Food_desc,
+                this.Food_banner,
+                this.Food_price,
+                this.Food_category
         );
         return tmp;
     }
 
-    public String getCouponID() {
-        return CouponID;
+    public String getFood_name() {
+        return Food_name;
     }
 
-    public void setCouponID(String couponID) {
-        CouponID = couponID;
+    public void setFood_name(String food_name) {
+        Food_name = food_name;
     }
 
-    public byte[] getProductimage() {
-        return Productimage;
+    public String getFood_id() {
+        return Food_id;
     }
 
-    public void setProductimage(byte[] productimage) {
-        Productimage = productimage;
+    public void setFood_id(String food_id) {
+        Food_id = food_id;
     }
 
-    public String getCProductDesc() {
-        return CProductDesc;
+    public String getFood_desc() {
+        return Food_desc;
     }
 
-    public void setCProductDesc(String CProductDesc) {
-        this.CProductDesc = CProductDesc;
+    public void setFood_desc(String food_desc) {
+        Food_desc = food_desc;
     }
 
-    public String getDiscAmount() {
-        return DiscAmount;
+    public String getFood_banner() {
+        return Food_banner;
     }
 
-    public void setDiscAmount(String discAmount) {
-        DiscAmount = discAmount;
+    public void setFood_banner(String food_banner) {
+        Food_banner = food_banner;
     }
 
-    public String getUnitPrice() {
-        return UnitPrice;
+    public String getFood_price() {
+        return Food_price;
     }
 
-    public void setUnitPrice(String unitPrice) {
-        UnitPrice = unitPrice;
+    public void setFood_price(String food_price) {
+        Food_price = food_price;
     }
 
-    public String getUserID() {
-        return UserID;
+    public String getFood_category() {
+        return Food_category;
     }
 
-    public void setUserID(String userID) {
-        UserID = userID;
-    }
-
-    public String getTotalCoupon() {
-        return TotalCoupon;
-    }
-
-    public void setTotalCoupon(String totalCoupon) {
-        TotalCoupon = totalCoupon;
-    }
-
-    public String getAvailableCoupon() {
-        return AvailableCoupon;
-    }
-
-    public void setAvailableCoupon(String availableCoupon) {
-        AvailableCoupon = availableCoupon;
-    }
-
-    public String getValidFrom() {
-        return ValidFrom;
-    }
-
-    public void setValidFrom(String validFrom) {
-        ValidFrom = validFrom;
-    }
-
-    public String getValidTo() {
-        return ValidTo;
-    }
-
-    public void setValidTo(String validTo) {
-        ValidTo = validTo;
-    }
-
-    public String getCouponDesc() {
-        return CouponDesc;
-    }
-
-    public void setCouponDesc(String couponDesc) {
-        CouponDesc = couponDesc;
+    public void setFood_category(String food_category) {
+        Food_category = food_category;
     }
 }
 

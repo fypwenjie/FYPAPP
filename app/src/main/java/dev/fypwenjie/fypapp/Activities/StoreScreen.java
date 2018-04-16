@@ -38,7 +38,6 @@ import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
 import dev.fypwenjie.fypapp.RequestHandler;
 
-import static dev.fypwenjie.fypapp.Activities.MainActivity.KEY_PARAM1;
 
 public class StoreScreen extends AppCompatActivity implements AbsListView.OnScrollListener {
 
@@ -58,7 +57,8 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
     View mContainerHeader;
     FloatingActionButton mFab;
 
-    private static final String GET_STORE_URL = "https://fyp-wenjie.000webhostapp.com/store/store_list";
+    private static final String GET_FOOD_URL = "https://fyp-wenjie.000webhostapp.com/food/food_list";
+    private static final String KEY_FOOD_SID = "food_store_id";
     ObjectAnimator fade;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +74,7 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
 
         store_id = getIntent().getStringExtra("store_id");
 
+        Log.d("store id", store_id.toString());
         // Inflate the header view and attach it to the ListView
         View headerView = LayoutInflater.from(this)
                 .inflate(R.layout.listview_header, listView, false);
@@ -92,7 +93,7 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
         fade.setDuration(400);
 
         listView.setOnScrollListener(this);
-        new Food_list("0").execute();
+        new Food_list(store_id).execute();
     }
 
 
@@ -188,11 +189,11 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
     }
 
     public class Food_list extends AsyncTask<String, Void, String> {
-        String param1;
+        String food_sid;
         RequestHandler rh = new RequestHandler();
 
-        public Food_list(String param1) {
-            this.param1 = param1;
+        public Food_list(String food_sid) {
+            this.food_sid = food_sid;
         }
 
         @Override
@@ -212,24 +213,28 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
             try {
 
                 JSONArray jsonArray = new JSONArray(json);
+                if (jsonArray != null) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonobject = jsonArray.getJSONObject(i);
+                        food.setFood_id(String.valueOf(jsonobject.getString("id")));
+                        food.setFood_name(jsonobject.getString("f_name"));
+                        food.setFood_desc(jsonobject.getString("f_description"));
+                        food.setFood_category(jsonobject.getString("f_category"));
+                        food.setFood_price(jsonobject.getString("f_price"));
+                        food.setFood_banner(jsonobject.getString("f_banner"));
 
-                for(int i=0; i < jsonArray.length(); i++) {
-                    JSONObject jsonobject = jsonArray.getJSONObject(i);
-                    store.setStore_name(jsonobject.getString("s_name"));
-                    store.setStore_id( String.valueOf(jsonobject.getInt("id")));
-                    store.setStore_banner(jsonobject.getString("s_image"));
-                    store.setStore_category(jsonobject.getString("s_type"));
+                        foods.add(food.copy());
+                    }
 
-                    stores.add(store.copy());
+                    FoodAdapter foodAdapter = new FoodAdapter(foods, StoreScreen.this);
+
+
+                    listView.setAdapter(foodAdapter);
+                    dialog.cancel();
+                    Log.i("tag", "onPostExecute");
+                }else {
+                    txt_store_name.setText("");
                 }
-
-                FoodAdapter foodAdapter = new FoodAdapter(stores, StoreScreen.this);
-
-
-                listView.setAdapter(foodAdapter);
-                dialog.cancel();
-                Log.i("tag", "onPostExecute");
-
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
@@ -242,8 +247,9 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
         @Override
         protected String doInBackground(String... strings) {
             HashMap<String, String> information = new HashMap<>();
-            information.put(KEY_PARAM1, param1);
-            return rh.sendPostRequest(GET_STORE_URL, information);
+            information.put(KEY_FOOD_SID, food_sid);
+            Log.d("store id 2",food_sid);
+            return rh.sendPostRequest(GET_FOOD_URL, information);
         }
     }
 
