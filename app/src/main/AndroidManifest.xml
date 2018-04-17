@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,7 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.StoreScreen" />
+        <activity
+            android:name=".Activities.StoreScreen"
+            android:parentActivityName=".Activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.fypwenjie.fypapp.Activities.MainActivity" />
+        </activity>
         <activity android:name=".Activities.LoginScreen" />
         <activity android:name=".Activities.QrScanner" />
         <activity
@@ -33,6 +38,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.fypwenjie.fypapp.Activities.MainActivity" />
         </activity>
+        <activity android:name=".Activities.OrderScreen" />
+        <activity android:name=".Activities.AddCartScreen"></activity>
     </application>
 
 </manifest>

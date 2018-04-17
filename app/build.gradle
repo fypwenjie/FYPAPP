@@ -29,7 +29,7 @@ android {
 
 
 repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/'}
 }
 
 dependencies {
@@ -54,6 +54,8 @@ dependencies {
     compile 'com.daimajia.slider:library:1.1.5@aar'
     //Image Loader
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    compile 'com.shawnlin:number-picker:2.4.4'
 
     testCompile 'junit:junit:4.12'
     def appCenterSdkVersion = '1.4.0'

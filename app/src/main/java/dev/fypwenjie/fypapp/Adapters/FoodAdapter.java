@@ -5,6 +5,7 @@ package dev.fypwenjie.fypapp.Adapters;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import dev.fypwenjie.fypapp.Activities.AddCartScreen;
 import dev.fypwenjie.fypapp.Domain.Food;
 import dev.fypwenjie.fypapp.R;
 
@@ -25,6 +27,7 @@ public class FoodAdapter extends ArrayAdapter<Food> implements View.OnClickListe
 
     private ArrayList<Food> dataSet;
     Context mContext;
+
 
     // View lookup cache
     private static class ViewHolder {
@@ -63,7 +66,7 @@ public class FoodAdapter extends ArrayAdapter<Food> implements View.OnClickListe
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Food food = getItem(position);
+        final Food food = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -93,6 +96,16 @@ public class FoodAdapter extends ArrayAdapter<Food> implements View.OnClickListe
         lastPosition = position;
         viewHolder.foodTitle.setText((food.getFood_name() != null) ?  food.getFood_name() : "");
         viewHolder.foodDesc.setText((food.getFood_desc() != null) ?   food.getFood_desc() : "");
+        viewHolder.foodLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mContext, AddCartScreen.class);
+                i.putExtra("food_name", food.getFood_name());
+                i.putExtra("food_desc", food.getFood_desc());
+                i.putExtra("food_price", food.getFood_price());
+                mContext.startActivity(i);
+            }
+        });
         viewHolder.foodPrice.setText((food.getFood_price() != null) ?  food.getFood_price() : "");
         if(food.getFood_banner() == null) {
             LinearLayout.LayoutParams lParams = (LinearLayout.LayoutParams) viewHolder.imgWrapper.getLayoutParams(); //or create new LayoutParams...

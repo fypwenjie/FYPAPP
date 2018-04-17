@@ -63,7 +63,7 @@ public class StoreScreen extends AppCompatActivity implements AbsListView.OnScro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_screen);
+        setContentView(R.layout.activity_store_screen);
 
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
