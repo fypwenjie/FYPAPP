@@ -71,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         */return null;
     }
 
-    public List<Cart> getNotes(String token) {
+    public List<Cart> getCarts(String token) {
         List<Cart> carts = new ArrayList<>();
 
         // Select All Query
@@ -110,7 +110,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int count = cursor.getCount();
         cursor.close();
-
 
         // return count
         return count;

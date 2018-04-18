@@ -15,12 +15,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import dev.fypwenjie.fypapp.Activities.LoginScreen;
+import dev.fypwenjie.fypapp.Activities.LoginScreen2;
 import dev.fypwenjie.fypapp.Activities.QrScanner;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
@@ -47,6 +48,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private RelativeLayout drawer_user_profile;
+    private LinearLayout logout_layout;
     private boolean mUserLearnedDrawer;
     private View containerView;
     private boolean mFromSavedInsatanceState;
@@ -93,13 +95,13 @@ public class NavigationDrawerFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginScreen.class);
+                Intent intent = new Intent(getActivity(), LoginScreen2.class);
                 startActivity(intent);
             }
         });
 
         drawer_user_profile = (RelativeLayout) view.findViewById(R.id.drawer_user_profile);
-        txtImgName = (TextView) view.findViewById(R.id.txtImgName);
+        logout_layout = (LinearLayout) view.findViewById(R.id.logout_layout);
         txtCustEmail = (TextView) view.findViewById(R.id.txtCustEmail);
         txtCustName = (TextView) view.findViewById(R.id.txtCustName);
         SharedPreferences prefs = this.getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
@@ -112,22 +114,16 @@ public class NavigationDrawerFragment extends Fragment {
 
         if (cust_user_id.equals("")) {
             drawer_user_profile.setVisibility(View.GONE);
+            logout_layout.setVisibility(View.GONE);
             login.setVisibility(View.VISIBLE);
         } else {
             login.setVisibility(View.GONE);
+            logout_layout.setVisibility(View.VISIBLE);
             drawer_user_profile.setVisibility(View.VISIBLE);
-            txtImgName.setText((cust_first_name != null && !cust_first_name.isEmpty()) ? String.valueOf(cust_first_name.charAt(0)) : "");
             txtCustEmail.setText((cust_email != null && !cust_email.isEmpty()) ? String.valueOf(cust_email) : "");
             txtCustName.setText((cust_first_name != null && cust_last_name != null) ? String.valueOf(cust_first_name + " " + cust_last_name) : "");
         }
 
-  /*      newCategory_list = (RecyclerView) view.findViewById(R.id.newCategory_list);
-        newCategory_list.setLayoutManager(new LinearLayoutManager(getActivity()));
-        newCategory_list.setNestedScrollingEnabled(false);
-*/
-       /* AsyncCallWS task = new AsyncCallWS();
-        task.execute();
-*/
         return view;
     }
 
@@ -163,68 +159,6 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
     }
-/*
-    public void calculate() {
-        SoapObject request = new SoapObject(WSDL_TARGET_NAMESPACE,
-                OPERATION_NAME);
 
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.dotNet = true;
-
-        envelope.setOutputSoapObject(request);
-
-        HttpTransportSE httpTransport = new HttpTransportSE(SOAP_ADDRESS);
-
-        try {
-            httpTransport.call(SOAP_ACTION, envelope);
-            SoapObject response = (SoapObject) envelope.getResponse();
-
-            Log.i("Rest", response.toString());
-
-            for (int i = 0; i < response.getPropertyCount(); i++) {
-                SoapObject pii = (SoapObject) response.getProperty(i);
-                store.setCategory(pii.getProperty("CategoryDesc").toString());
-                store.setCategoryID(pii.getProperty("CategoryID").toString());
-
-                categories.add(store.copy());
-            }
-
-        } catch (Exception exception) {
-            Log.i(TAG, exception.toString());
-        }
-    }*/
-
-    /*private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(getActivity());
-            dialog.setCancelable(true);
-            dialog.setMessage("Loading...");
-            dialog.show();
-            Log.i(TAG, "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Log.i(TAG, "doInBackground");
-            calculate();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            StoreAdapter storeAdapter = new StoreAdapter(getActivity(), categories);
-            Log.i("categories screen s", String.valueOf(categories.size()));
-
-            newCategory_list.setAdapter(storeAdapter);
-            dialog.cancel();
-            Log.i(TAG, "onPostExecute");
-        }
-
-    }
-*/
 
 }

@@ -1,208 +1,363 @@
 package dev.fypwenjie.fypapp.Activities;
 
-/**
- * Created by VINTEDGE on 9/4/2018.
- */
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.app.LoaderManager.LoaderCallbacks;
+
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.fypwenjie.fypapp.R;
 
+import static android.Manifest.permission.READ_CONTACTS;
 
+/**
+ * A login screen that offers login via email/password.
+ */
+public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-public class LoginScreen extends AppCompatActivity {
-    private static final String WSDL_TARGET_NAMESPACE = "http://tempuri.org/";
-    private static final String SOAP_ADDRESS = "http://www.ideazes.com/IdeazesWCF/IdeazesServices.svc";
-    private static final String SOAP_ACTION_VALID = "http://tempuri.org/IService1/GetValidateICSUser";
-    private static final String OPERATION_NAME_VALID = "GetValidateICSUser";
-    private static final String SOAP_ACTION_CUSTINFO = "http://tempuri.org/IService1/GetICSUserDatabyEmail";
-    private static final String OPERATION_NAME_CUSTINFO = "GetICSUserDatabyEmail";
-    private static final String MY_PREFS_NAME = "MyPrefsFile";
-    private static final String DECRYPT_KEY = "IDEAZESICS88";
-    Button btn_get;
-    ProgressDialog dialog;
-    String login_result, email, password, cust_info;
-    String[] arr_custFields;
-    Map<String, String> arr_custInfo = new HashMap<>();
-    EditText et_email, et_password;
-    String TAG = "Response";
+    /**
+     * Id to identity READ_CONTACTS permission request.
+     */
+    private static final int REQUEST_READ_CONTACTS = 0;
+
+    /**
+     * A dummy authentication store containing known user names and passwords.
+     * TODO: remove after connecting to a real authentication system.
+     */
+    private static final String[] DUMMY_CREDENTIALS = new String[]{
+            "foo@example.com:hello", "bar@example.com:world"
+    };
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
+    private UserLoginTask mAuthTask = null;
+
+    // UI references.
+    private AutoCompleteTextView mEmailView;
+    private EditText mPasswordView;
+    private View mProgressView;
+    private View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+        setupActionBar();
+        // Set up the login form.
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        populateAutoComplete();
 
-        Resources res = getResources();
-        arr_custFields = res.getStringArray(R.array.cust_info);
+        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
 
-        et_email = (EditText) findViewById(R.id.input_email);
-        et_password = (EditText) findViewById(R.id.input_password);
-        btn_get = (Button) findViewById(R.id.btn_login);
-        btn_get.setOnClickListener(new View.OnClickListener() {
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = et_email.getText().toString();
-                password = et_password.getText().toString();
-                AsyncCallValidate taskValid = new AsyncCallValidate();
-                taskValid.execute();
+                attemptLogin();
             }
         });
+
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
     }
 
-    public void get_response() {
-        SoapObject request = new SoapObject(WSDL_TARGET_NAMESPACE,
-                OPERATION_NAME_VALID);
-        request.addProperty("Email", email);
-        request.addProperty("Password", password);
-        request.addProperty("Decryptkey", DECRYPT_KEY);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-        envelope.dotNet = true;
+    private void populateAutoComplete() {
+        if (!mayRequestContacts()) {
+            return;
+        }
 
-        envelope.setOutputSoapObject(request);
+        getLoaderManager().initLoader(0, null, this);
+    }
 
-        HttpTransportSE httpTransport = new HttpTransportSE(SOAP_ADDRESS);
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+        return false;
+    }
 
-        try {
-            httpTransport.call(SOAP_ACTION_VALID, envelope);
-            SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-            login_result = response.toString();
-            Log.i("Rest", response.toString());
-
-        } catch (Exception exception)
-
-        {
-            Log.i(TAG, exception.toString());
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoComplete();
+            }
         }
     }
 
-    public void get_cust_info() {
-        if (arr_custFields != null && arr_custFields.length > 0) {
-            for (String c : arr_custFields) {
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setupActionBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Show the Up button in the action bar.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
-                SoapObject request = new SoapObject(WSDL_TARGET_NAMESPACE,
-                        OPERATION_NAME_CUSTINFO);
-                request.addProperty("Email", email);
-                request.addProperty("Field", c);
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                        SoapEnvelope.VER11);
-                envelope.dotNet = true;
+    /**
+     * Attempts to sign in or register the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
+    private void attemptLogin() {
+        if (mAuthTask != null) {
+            return;
+        }
 
-                envelope.setOutputSoapObject(request);
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
 
-                HttpTransportSE httpTransport = new HttpTransportSE(SOAP_ADDRESS);
+        // Store values at the time of the login attempt.
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
 
-                try {
-                    httpTransport.call(SOAP_ACTION_CUSTINFO, envelope);
-                    SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-                    cust_info = response.toString();
-                    arr_custInfo.put(c, cust_info);
-                    Log.i("Rest", response.toString());
+        boolean cancel = false;
+        View focusView = null;
 
-                } catch (Exception exception) {
-                    Log.i(TAG, exception.toString());
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
+        }
+    }
+
+    private boolean isEmailValid(String email) {
+        //TODO: Replace this with your own logic
+        return email.contains("@");
+    }
+
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 4;
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(this,
+                // Retrieve data rows for the device user's 'profile' contact.
+                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
+                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+
+                // Select only email addresses.
+                ContactsContract.Contacts.Data.MIMETYPE +
+                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
+                .CONTENT_ITEM_TYPE},
+
+                // Show primary email addresses first. Note that there won't be
+                // a primary email address if the user hasn't specified one.
+                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        List<String> emails = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            emails.add(cursor.getString(ProfileQuery.ADDRESS));
+            cursor.moveToNext();
+        }
+
+        addEmailsToAutoComplete(emails);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+
+    }
+
+    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(LoginScreen.this,
+                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+
+        mEmailView.setAdapter(adapter);
+    }
+
+
+    private interface ProfileQuery {
+        String[] PROJECTION = {
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+        };
+
+        int ADDRESS = 0;
+        int IS_PRIMARY = 1;
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mEmail;
+        private final String mPassword;
+
+        UserLoginTask(String email, String password) {
+            mEmail = email;
+            mPassword = password;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            try {
+                // Simulate network access.
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return false;
+            }
+
+            for (String credential : DUMMY_CREDENTIALS) {
+                String[] pieces = credential.split(":");
+                if (pieces[0].equals(mEmail)) {
+                    // Account exists, return true if the password matches.
+                    return pieces[1].equals(mPassword);
                 }
             }
-        }
-    }
 
-    private AlertDialog showConfirmDialog(final Activity act, CharSequence title, CharSequence message, CharSequence buttonYes) {
-        final AlertDialog.Builder backDialog = new AlertDialog.Builder(act);
-        backDialog.setTitle(title);
-        backDialog.setMessage(message);
-        backDialog.setCancelable(false);
-        backDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        return backDialog.show();
-    }
-
-    private class AsyncCallValidate extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(LoginScreen.this);
-            dialog.setCancelable(true);
-            dialog.setMessage("Validating...");
-            dialog.show();
-            Log.i(TAG, "onPreExecute");
+            // TODO: register the new account here.
+            return true;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            Log.i(TAG, "doInBackground");
-            get_response();
-            return null;
-        }
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
 
-        @Override
-        protected void onPostExecute(Void result) {
-            if (login_result.equals("false")) {
-                showConfirmDialog(LoginScreen.this, "Error", "Login Failed !", "Close").show();
-                dialog.cancel();
+            if (success) {
+                finish();
             } else {
-                dialog.cancel();
-                AsyncCallCustInfo taskCust = new AsyncCallCustInfo();
-                taskCust.execute();
-
-                Intent intent = new Intent(LoginScreen.this, MainActivity.class);
-                startActivity(intent);
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
             }
         }
-    }
-
-    private class AsyncCallCustInfo extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(LoginScreen.this);
-            dialog.setCancelable(true);
-            dialog.setMessage("Loading...");
-            dialog.show();
-            Log.i(TAG, "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Log.i(TAG, "doInBackground");
-            get_cust_info();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-            for (Map.Entry entry : arr_custInfo.entrySet()) {
-                editor.putString(entry.getKey().toString(), entry.getValue().toString());
-            }
-            editor.commit();
-
-            dialog.cancel();
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
         }
     }
-
 }
+
