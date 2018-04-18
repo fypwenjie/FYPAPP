@@ -1,86 +1,57 @@
 package dev.fypwenjie.fypapp.Domain;
 
-import java.io.Serializable;
-import java.util.Date;
+
 
 /**
  * Created by VINTEDGE on 7/4/2018.
  */
 
-public class Account implements Serializable {
+public class Account  {
 
-    public int acc_id;
-    public String cust_id;
-    public String user_name;
-    public String acc_password;
-    public String acc_security_code;
-    public String profile_image_path;
-    public double acc_balance;
-    public Date register_date;
+    public String acc_id;
+    public String acc_name;
+    public String acc_email;
+    public String acc_token;
     public int login_response;
 
-    public int getAcc_id() {
+    public Account(String acc_id, String acc_name, String acc_email, String acc_token, int login_response) {
+        this.acc_id = acc_id;
+        this.acc_name = acc_name;
+        this.acc_email = acc_email;
+        this.acc_token = acc_token;
+        this.login_response = login_response;
+    }
+
+    public String getAcc_id() {
         return acc_id;
     }
 
-    public void setAcc_id(int acc_id) {
+    public void setAcc_id(String acc_id) {
         this.acc_id = acc_id;
     }
 
-    public String getCust_id() {
-        return cust_id;
+    public String getAcc_name() {
+        return acc_name;
     }
 
-    public void setCust_id(String cust_id) {
-        this.cust_id = cust_id;
+    public void setAcc_name(String acc_name) {
+        this.acc_name = acc_name;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getAcc_email() {
+        return acc_email;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setAcc_email(String acc_email) {
+        this.acc_email = acc_email;
     }
 
-    public String getAcc_password() {
-        return acc_password;
+    public String getAcc_token() {
+        return acc_token;
     }
 
-    public void setAcc_password(String acc_password) {
-        this.acc_password = acc_password;
-    }
-
-    public String getAcc_security_code() {
-        return acc_security_code;
-    }
-
-    public void setAcc_security_code(String acc_security_code) {
-        this.acc_security_code = acc_security_code;
-    }
-
-    public String getProfile_image_path() {
-        return profile_image_path;
-    }
-
-    public void setProfile_image_path(String profile_image_path) {
-        this.profile_image_path = profile_image_path;
-    }
-
-    public double getAcc_balance() {
-        return acc_balance;
-    }
-
-    public void setAcc_balance(double acc_balance) {
-        this.acc_balance = acc_balance;
-    }
-
-    public Date getRegister_date() {
-        return register_date;
-    }
-
-    public void setRegister_date(Date register_date) {
-        this.register_date = register_date;
+    public void setAcc_token(String acc_token) {
+        this.acc_token = acc_token;
     }
 
     public int getLogin_response() {
@@ -90,5 +61,4 @@ public class Account implements Serializable {
     public void setLogin_response(int login_response) {
         this.login_response = login_response;
     }
-
 }

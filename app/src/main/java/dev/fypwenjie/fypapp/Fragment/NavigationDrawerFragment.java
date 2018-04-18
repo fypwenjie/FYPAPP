@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import dev.fypwenjie.fypapp.Activities.LoginScreen2;
+import dev.fypwenjie.fypapp.Activities.LoginScreen;
 import dev.fypwenjie.fypapp.Activities.QrScanner;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
@@ -95,7 +95,7 @@ public class NavigationDrawerFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginScreen2.class);
+                Intent intent = new Intent(getActivity(), LoginScreen.class);
                 startActivity(intent);
             }
         });
