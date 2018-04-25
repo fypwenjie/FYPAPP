@@ -18,6 +18,7 @@ public class Cart{
     public static final String COLUMN_CREATETIME = "c_createtime";
 
     private String Cart_id;
+    private String User_id;
     private String Food_id;
     private String Quantity;
     private String Price;
@@ -25,7 +26,6 @@ public class Cart{
     private String Token;
     private String Status;
     private String Createtime;
-
 
     // Create table SQL query
     public static final String CREATE_TABLE =
@@ -37,15 +37,16 @@ public class Cart{
                     + COLUMN_PRICE + " TEXT,"
                     + COLUMN_REMARK + " TEXT,"
                     + COLUMN_TOKEN + " TEXT,"
-                    + COLUMN_STATUS + " INTEGER,"
+                    + COLUMN_STATUS + " INTEGER NOT NULL DEFAULT 1,"
                     + COLUMN_CREATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
 
     public Cart() {
     }
 
-    public Cart(String Cart_id, String Food_id, String Quantity, String Price, String Remark, String Token, String Status, String Createtime) {
+    public Cart(String Cart_id, String User_id, String Food_id, String Quantity, String Price, String Remark, String Token, String Status, String Createtime) {
         this.Cart_id = Cart_id;
+        this.User_id = User_id;
         this.Food_id = Food_id;
         this.Quantity = Quantity;
         this.Price = Price;
@@ -53,6 +54,14 @@ public class Cart{
         this.Token = Token;
         this.Status = Status;
         this.Createtime = Createtime;
+    }
+
+    public String getUser_id() {
+        return User_id;
+    }
+
+    public void setUser_id(String user_id) {
+        User_id = user_id;
     }
 
     public String getCart_id() {

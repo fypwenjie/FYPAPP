@@ -1,7 +1,8 @@
-/**
+package dev.fypwenjie.fypapp; /**
  * Created by VINTEDGE on 17/4/2018.
  */
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -113,5 +114,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // return count
         return count;
+    }
+
+    public long addCart(Cart cart) {
+        // get writable database as we want to write data
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        // `id` and `timestamp` will be inserted automatically.
+        // no need to add them
+        values.put(Cart.COLUMN_USERID , cart.getUser_id());
+        values.put(Cart.COLUMN_FOODID , cart.getFood_id());
+        values.put(Cart.COLUMN_QUANTITY , cart.getQuantity());
+        values.put(Cart.COLUMN_PRICE , cart.getPrice());
+        values.put(Cart.COLUMN_REMARK , cart.getRemark());
+        values.put(Cart.COLUMN_TOKEN , cart.getToken());
+
+        // insert row
+        long id = db.insert(Cart.TABLE_NAME, null, values);
+
+        // close db connection
+        db.close();
+
+        // return newly inserted row id
+        return id;
     }
 }
