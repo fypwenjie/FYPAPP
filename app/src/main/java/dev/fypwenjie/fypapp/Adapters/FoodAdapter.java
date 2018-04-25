@@ -94,8 +94,8 @@ public class FoodAdapter extends ArrayAdapter<Food> implements View.OnClickListe
 
 
         lastPosition = position;
-        viewHolder.foodTitle.setText((food.getFood_name() != null) ?  food.getFood_name() : "");
-        viewHolder.foodDesc.setText((food.getFood_desc() != null) ?   food.getFood_desc() : "");
+        viewHolder.foodTitle.setText((food.getFood_name() != null) ?  food.getFood_name() : null);
+        viewHolder.foodDesc.setText((food.getFood_desc() != null) ?   food.getFood_desc() : null);
         viewHolder.foodLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +106,7 @@ public class FoodAdapter extends ArrayAdapter<Food> implements View.OnClickListe
                 mContext.startActivity(i);
             }
         });
-        viewHolder.foodPrice.setText((food.getFood_price() != null) ?  food.getFood_price() : "");
+        viewHolder.foodPrice.setText((food.getFood_price() != null) ?  "RM " + food.getFood_price() : "");
         if(food.getFood_banner() == null) {
             LinearLayout.LayoutParams lParams = (LinearLayout.LayoutParams) viewHolder.imgWrapper.getLayoutParams(); //or create new LayoutParams...
             lParams.weight = 0.0f;

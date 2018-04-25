@@ -38,9 +38,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.fypwenjie.fypapp.Adapters.CategoryAdapter;
 import dev.fypwenjie.fypapp.Adapters.StoreAdapter;
 import dev.fypwenjie.fypapp.Domain.Account;
-import dev.fypwenjie.fypapp.Domain.Store;
+import dev.fypwenjie.fypapp.Domain.Category;
 import dev.fypwenjie.fypapp.Fragment.NavigationDrawerFragment;
 import dev.fypwenjie.fypapp.R;
 import dev.fypwenjie.fypapp.RequestHandler;
@@ -54,11 +55,11 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
     ProgressDialog dialog;
     RecyclerView newStore_list;
 
-    ArrayList<Store> stores = new ArrayList<Store>();
-    Store store = new Store();
+    ArrayList<Category> categories = new ArrayList<Category>();
+    Category category = new Category();
 
     private Account account;
-    private static final String GET_STORE_URL = "https://fyp-wenjie.000webhostapp.com/store/store_list";
+    private static final String GET_STORE_URL = "https://fyp-wenjie.000webhostapp.com/category/category_list";
     final static String KEY_PARAM1 = "param1";
 
     final static String ACCOUNT_TABLE = "account";
@@ -202,19 +203,18 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
 
                 for(int i=0; i < jsonArray.length(); i++) {
                     JSONObject jsonobject = jsonArray.getJSONObject(i);
-                    store.setStore_name(jsonobject.getString("s_name"));
-                    store.setStore_id( String.valueOf(jsonobject.getInt("id")));
-                    store.setStore_banner(jsonobject.getString("s_image"));
-                    store.setStore_category(jsonobject.getString("s_type"));
+                    category.setCategory_name(jsonobject.getString("fc_name"));
+                    category.setCategory_id( String.valueOf(jsonobject.getInt("id")));
+                    category.setCategory_banner(jsonobject.getString("fc_image"));
 
-                    stores.add(store.copy());
+                    categories.add(category.copy());
                 }
 
-                StoreAdapter storeAdapter = new StoreAdapter(MainActivity.this, stores);
-                Log.i("home screen s", String.valueOf(stores.size()));
+                CategoryAdapter categoryAdapter = new CategoryAdapter(MainActivity.this, categories);
+                Log.i("home screen s", String.valueOf(categories.size()));
 
 
-                newStore_list.setAdapter(storeAdapter);
+                newStore_list.setAdapter(categoryAdapter);
                 dialog.cancel();
                 Log.i("tag", "onPostExecute");
 

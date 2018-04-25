@@ -26,8 +26,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_search">Search</string>
     <string name="search_hint">search</string>
-    <string name="mainpage_store_tab">Stores</string>
-    <string name="title_activity_login_scree">Sign in</string>
+    <string name="mainpage_tab_title">Categories</string>
+    <string name="title_activity_login_screen">Sign in</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
