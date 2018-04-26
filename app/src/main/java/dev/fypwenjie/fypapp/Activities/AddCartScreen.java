@@ -1,9 +1,12 @@
 package dev.fypwenjie.fypapp.Activities;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.shawnlin.numberpicker.NumberPicker;
 
 import java.util.Locale;
@@ -97,6 +101,8 @@ public class AddCartScreen extends AppCompatActivity {
                 cart.setToken (token);
 
                 databaseHelper.addCart(cart);
+
+                showConfirmDialog(AddCartScreen.this,"Add Cart Success","Want to continue order? ","Yes", "Checkout");
             }
         });
 
@@ -126,4 +132,24 @@ public class AddCartScreen extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private AlertDialog showConfirmDialog(final Activity act, CharSequence title, CharSequence message,CharSequence buttonYes ,CharSequence buttonNo) {
+        final AlertDialog.Builder backDialog = new AlertDialog.Builder(act);
+        backDialog.setTitle(title);
+        backDialog.setMessage(message);
+        backDialog.setCancelable(false);
+        backDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        backDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent( AddCartScreen.this,OrderScreen.class);
+                startActivity(intent);
+            }
+        });
+        return backDialog.show();
+    }
+
 }

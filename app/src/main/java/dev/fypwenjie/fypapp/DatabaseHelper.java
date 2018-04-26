@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import dev.fypwenjie.fypapp.Domain.Account;
 import dev.fypwenjie.fypapp.Domain.Cart;
 
 /**
@@ -36,6 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // create notes table
         db.execSQL(Cart.CREATE_TABLE);
+        db.execSQL(Account.CREATE_TABLE);
     }
 
     // Upgrading database
@@ -43,6 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + Cart.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Account.TABLE_NAME);
 
         // Create tables again
         onCreate(db);
@@ -104,6 +106,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // return notes list
         return carts;
+    }
+
+    public long Login(Account account) {
+        // get writable database as we want to write data
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        // `id` and `timestamp` will be inserted automatically.
+        // no need to add them
+        values.put(Account.COLUMN_USERID , account.getAcc_id());
+        values.put(Account.COLUMN_USERNAME , account.getAcc_username());
+        values.put(Account.COLUMN_DISPLAY_NAME , account.getAcc_name());
+        values.put(Account.COLUMN_EMAIL , account.getAcc_email());
+        values.put(Account.COLUMN_CONTACT , account.getAcc_contact());
+        values.put(Account.COLUMN_TOKEN , account.getAcc_token());
+        values.put(Account.COLUMN_STATUS , account.getAcc_status());
+
+        // insert row
+        long id = db.insert(Cart.TABLE_NAME, null, values);
+
+        // close db connection
+        db.close();
+
+        // return newly inserted row id
+        return id;
     }
 
     public int getNotesCount() {

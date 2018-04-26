@@ -1,25 +1,68 @@
 package dev.fypwenjie.fypapp.Domain;
 
 
-
 /**
  * Created by VINTEDGE on 7/4/2018.
  */
 
 public class Account  {
+    public static final String TABLE_NAME = "cust";
+
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_USERID = "c_id";
+    public static final String COLUMN_USERNAME = "c_username";
+    public static final String COLUMN_DISPLAY_NAME = "c_name";
+    public static final String COLUMN_EMAIL = "c_email";
+    public static final String COLUMN_CONTACT = "c_contact_no";
+    public static final String COLUMN_TOKEN = "c_contact_no";
+    public static final String COLUMN_STATUS = "c_status";
+    public static final String COLUMN_CREATETIME = "c_createtime";
 
     public String acc_id;
+    public String acc_username;
     public String acc_name;
     public String acc_email;
+    public String acc_contact;
     public String acc_token;
-    public int login_response;
+    public int acc_status;
 
-    public Account(String acc_id, String acc_name, String acc_email, String acc_token, int login_response) {
+    public Account(String acc_id, String acc_username, String acc_name, String acc_email, String acc_contact, String acc_token, int acc_status) {
         this.acc_id = acc_id;
+        this.acc_username = acc_username;
         this.acc_name = acc_name;
         this.acc_email = acc_email;
+        this.acc_contact = acc_contact;
         this.acc_token = acc_token;
-        this.login_response = login_response;
+        this.acc_status = acc_status;
+    }
+
+    public static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + "("
+                    + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + COLUMN_USERID + " INTEGER,"
+                    + COLUMN_USERNAME + " TEXT,"
+                    + COLUMN_DISPLAY_NAME + " TEXT,"
+                    + COLUMN_EMAIL + " TEXT,"
+                    + COLUMN_CONTACT + " TEXT,"
+                    + COLUMN_TOKEN + " TEXT NOT NULL DEFAULT '1',"
+                    + COLUMN_STATUS + " INTEGER NOT NULL DEFAULT 1,"
+                    + COLUMN_CREATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP"
+                    + ")";
+
+    public String getAcc_contact() {
+        return acc_contact;
+    }
+
+    public void setAcc_contact(String acc_contact) {
+        this.acc_contact = acc_contact;
+    }
+
+    public String getAcc_username() {
+        return acc_username;
+    }
+
+    public void setAcc_username(String acc_username) {
+        this.acc_username = acc_username;
     }
 
     public String getAcc_id() {
@@ -54,11 +97,11 @@ public class Account  {
         this.acc_token = acc_token;
     }
 
-    public int getLogin_response() {
-        return login_response;
+    public int getAcc_status() {
+        return acc_status;
     }
 
-    public void setLogin_response(int login_response) {
-        this.login_response = login_response;
+    public void setAcc_status(int login_response) {
+        this.acc_status = login_response;
     }
 }

@@ -9,27 +9,38 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.fypwenjie.fypapp.DatabaseHelper;
+import dev.fypwenjie.fypapp.Domain.Account;
 import dev.fypwenjie.fypapp.R;
+import dev.fypwenjie.fypapp.RequestHandler;
 
 
 public class LoginScreen extends AppCompatActivity {
     Button btn_get;
     ProgressDialog dialog;
+    Account account;
+    DatabaseHelper databaseHelper;
     String login_result, email, password, cust_info;
     String[] arr_custFields;
     Map<String, String> arr_custInfo = new HashMap<>();
     EditText et_email, et_password;
     String TAG = "Response";
-    private static final String LOGIN_URL = "https://fyp-wenjie.000webhostapp.com/food/food_list";
+    private static final String LOGIN_URL = "https://fyp-wenjie.000webhostapp.com/customer/login";
     private static final String KEY_USERNAME = "login_username";
     private static final String KEY_LOGINPASS = "login_password";
     private static final String KEY_FOOD_SID = "food_store_id";
@@ -53,10 +64,10 @@ public class LoginScreen extends AppCompatActivity {
 
             }
         });
-     //   new Login("","").execute();
+        new Login(email,password).execute();
     }
 
-  /*  public class Login extends AsyncTask<String, Void, String> {
+    public class Login extends AsyncTask<String, Void, String> {
         String acc_username;
         String acc_password;
         RequestHandler rh = new RequestHandler();
@@ -82,37 +93,23 @@ public class LoginScreen extends AppCompatActivity {
             super.onPostExecute(json);
 
             try {
-
                 JSONArray jsonArray = new JSONArray(json);
                 if (jsonArray != null) {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonobject = jsonArray.getJSONObject(i);
-                        food.setFood_id(String.valueOf(jsonobject.getString("id")));
-                        food.setFood_name(jsonobject.getString("f_name"));
-                        food.setFood_desc(jsonobject.getString("f_description"));
-                        food.setFood_category(jsonobject.getString("f_category"));
-                        food.setFood_price(jsonobject.getString("f_price"));
-                        food.setFood_banner(jsonobject.getString("f_banner"));
+                        account.setAcc_id("");
+                        account.setAcc_username("");
+                        account.setAcc_name("");
+                        account.setAcc_email("");
+                        account.setAcc_contact("");
+                        account.setAcc_status(0);
 
-                        foods.add(food.copy());
+                        databaseHelper.Login(account);
                     }
-
-                    FoodAdapter foodAdapter = new FoodAdapter(foods, StoreScreen.this);
-
-
-                    listView.setAdapter(foodAdapter);
-                    dialog.cancel();
-                    Log.i("tag", "onPostExecute");
-                }else {
-                    txt_store_name.setText("");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
-
-
         }
 
         @Override
@@ -123,7 +120,6 @@ public class LoginScreen extends AppCompatActivity {
             return rh.sendPostRequest(LOGIN_URL, information);
         }
     }
-*/
 
     private AlertDialog showConfirmDialog(final Activity act, CharSequence title, CharSequence message, CharSequence buttonYes) {
         final AlertDialog.Builder backDialog = new AlertDialog.Builder(act);
