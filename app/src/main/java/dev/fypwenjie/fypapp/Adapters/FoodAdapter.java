@@ -102,6 +102,7 @@ public class FoodAdapter extends ArrayAdapter<Food> implements View.OnClickListe
                 Intent i = new Intent(mContext, AddCartScreen.class);
                 i.putExtra("food_id", food.getFood_id());
                 i.putExtra("food_name", food.getFood_name());
+                i.putExtra("food_quantity", food.getFood_quantity());
                 i.putExtra("food_desc", food.getFood_desc());
                 i.putExtra("food_price", food.getFood_price());
                 mContext.startActivity(i);

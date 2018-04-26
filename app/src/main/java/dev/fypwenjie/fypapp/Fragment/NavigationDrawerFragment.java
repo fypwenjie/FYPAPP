@@ -22,6 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import dev.fypwenjie.fypapp.Activities.LoginScreen;
+import dev.fypwenjie.fypapp.Activities.OrderScreen;
 import dev.fypwenjie.fypapp.Activities.QrScanner;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
@@ -44,7 +45,7 @@ public class NavigationDrawerFragment extends Fragment {
     ProgressDialog dialog;
     String TAG = "Response";
     RecyclerView newCategory_list;
-    TextView qr_scanner, login, txtImgName, txtCustName, txtCustEmail;
+    TextView qr_scanner, login, txtImgName, txtCustName, txtCustEmail, Cart;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private RelativeLayout drawer_user_profile;
@@ -96,6 +97,14 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), LoginScreen.class);
+                startActivity(intent);
+            }
+        });
+        Cart = (TextView) view.findViewById(R.id.Cart);
+        Cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), OrderScreen.class);
                 startActivity(intent);
             }
         });

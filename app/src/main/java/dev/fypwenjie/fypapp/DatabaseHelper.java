@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "notes_db";
+    private static final String DATABASE_NAME = "local_db";
 
 
     public DatabaseHelper(Context context) {
@@ -72,11 +72,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         */return null;
     }
 
-    public List<Cart> getCarts(String token) {
-        List<Cart> carts = new ArrayList<>();
+    public ArrayList<Cart> getCarts(String token) {
+        ArrayList<Cart> carts = new ArrayList<Cart>();
 
         // Select All Query
-        String selectQuery = "SELECT * FROM " + Cart.TABLE_NAME + " WHERE c_token = "+ token + " ORDER BY " + Cart.COLUMN_CREATETIME + "ASC";                ;
+        String selectQuery = "SELECT * FROM " + Cart.TABLE_NAME +   " WHERE c_token = '1' ORDER BY " + Cart.COLUMN_CREATETIME + " DESC";                ;
+        //String selectQuery = "SELECT * FROM " + Cart.TABLE_NAME + " WHERE c_token = "+ token + " ORDER BY " + Cart.COLUMN_CREATETIME + "ASC";                ;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -87,6 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Cart cart = new Cart();
                 cart.setCart_id(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
                 cart.setFood_id(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_FOODID)));
+                cart.setFood_name(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_FOODNAME)));
                 cart.setQuantity(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_QUANTITY)));
                 cart.setPrice(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_PRICE)));
                 cart.setRemark(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_REMARK)));
@@ -125,6 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // no need to add them
         values.put(Cart.COLUMN_USERID , cart.getUser_id());
         values.put(Cart.COLUMN_FOODID , cart.getFood_id());
+        values.put(Cart.COLUMN_FOODNAME , cart.getFood_name());
         values.put(Cart.COLUMN_QUANTITY , cart.getQuantity());
         values.put(Cart.COLUMN_PRICE , cart.getPrice());
         values.put(Cart.COLUMN_REMARK , cart.getRemark());

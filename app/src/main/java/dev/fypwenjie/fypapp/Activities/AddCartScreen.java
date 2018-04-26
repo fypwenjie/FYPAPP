@@ -35,6 +35,7 @@ public class AddCartScreen extends AppCompatActivity {
     Float food_price;
     String food_desc;
     String food_id;
+    String food_quantity;
     String food_name;
     String user_id = "1";
     String token = "12345";
@@ -51,6 +52,7 @@ public class AddCartScreen extends AppCompatActivity {
         food_desc = getIntent().getStringExtra("food_desc");
         food_name = getIntent().getStringExtra("food_name");
         food_id = getIntent().getStringExtra("food_id");
+        food_quantity = getIntent().getStringExtra("food_quantity");
         food_price = Float.parseFloat( getIntent().getStringExtra("food_price"));
         display_food_price = getIntent().getStringExtra("food_price");
 
@@ -69,15 +71,15 @@ public class AddCartScreen extends AppCompatActivity {
         //Set the minimum value of NumberPicker
         np_food_quantity.setMinValue(1);
         //Specify the maximum value/number of NumberPicker
-        np_food_quantity.setMaxValue(99);
+        np_food_quantity.setMaxValue(Integer.parseInt(food_quantity));
 
         //Gets whether the selector wheel wraps when reaching the min/max value.
         np_food_quantity.setWrapSelectorWheel(true);
         np_food_quantity.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                food_price = food_price * newVal;
-                display_food_price = String.format(Locale.US, "%.2f", food_price);
+
+                display_food_price = String.format(Locale.US, "%.2f", food_price * newVal);
                 txt_food_price.setText("RM " + display_food_price);
             }
         });
@@ -88,6 +90,7 @@ public class AddCartScreen extends AppCompatActivity {
 
                 cart.setUser_id(user_id);
                 cart.setFood_id(food_id);
+                cart.setFood_name(food_name);
                 cart.setQuantity (String.valueOf(np_food_quantity.getValue()));
                 cart.setPrice (display_food_price);
                 cart.setRemark (String.valueOf(edit_food_remark.getText()));

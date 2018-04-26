@@ -10,6 +10,7 @@ public class Cart{
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_USERID = "c_uid";
     public static final String COLUMN_FOODID = "c_fid";
+    public static final String COLUMN_FOODNAME = "c_fname";
     public static final String COLUMN_QUANTITY = "c_quantity";
     public static final String COLUMN_PRICE = "c_price";
     public static final String COLUMN_REMARK = "c_remark";
@@ -20,6 +21,7 @@ public class Cart{
     private String Cart_id;
     private String User_id;
     private String Food_id;
+    private String Food_name;
     private String Quantity;
     private String Price;
     private String Remark;
@@ -33,10 +35,11 @@ public class Cart{
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_USERID + " INTEGER,"
                     + COLUMN_FOODID + " INTEGER,"
+                    + COLUMN_FOODNAME + " TEXT,"
                     + COLUMN_QUANTITY + " INTEGER,"
                     + COLUMN_PRICE + " TEXT,"
                     + COLUMN_REMARK + " TEXT,"
-                    + COLUMN_TOKEN + " TEXT,"
+                    + COLUMN_TOKEN + " TEXT NOT NULL DEFAULT '1',"
                     + COLUMN_STATUS + " INTEGER NOT NULL DEFAULT 1,"
                     + COLUMN_CREATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
@@ -44,16 +47,25 @@ public class Cart{
     public Cart() {
     }
 
-    public Cart(String Cart_id, String User_id, String Food_id, String Quantity, String Price, String Remark, String Token, String Status, String Createtime) {
+    public Cart(String Cart_id, String User_id, String Food_id,String Food_name, String Quantity, String Price, String Remark, String Token, String Status, String Createtime) {
         this.Cart_id = Cart_id;
         this.User_id = User_id;
         this.Food_id = Food_id;
+        this.Food_name = Food_name;
         this.Quantity = Quantity;
         this.Price = Price;
         this.Remark = Remark;
         this.Token = Token;
         this.Status = Status;
         this.Createtime = Createtime;
+    }
+
+    public String getFood_name() {
+        return Food_name;
+    }
+
+    public void setFood_name(String food_name) {
+        Food_name = food_name;
     }
 
     public String getUser_id() {

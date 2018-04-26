@@ -24,9 +24,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.util.ArrayList;
 
 import dev.fypwenjie.fypapp.Activities.FoodMenuScreen;
-import dev.fypwenjie.fypapp.Activities.StoreScreen;
 import dev.fypwenjie.fypapp.Domain.Category;
-import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
 import dev.fypwenjie.fypapp.Util.GlobalValue;
 
@@ -52,7 +50,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_store, parent, false);
+        View view = inflater.inflate(R.layout.list_category, parent, false);
         CategoryViewHolder holder = new CategoryViewHolder(view);
         return holder;
     }

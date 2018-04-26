@@ -219,6 +219,7 @@ public class FoodMenuScreen extends AppCompatActivity implements AbsListView.OnS
                         JSONObject jsonobject = jsonArray.getJSONObject(i);
                         food.setFood_id(String.valueOf(jsonobject.getString("id")));
                         food.setFood_name(jsonobject.getString("f_name"));
+                        food.setFood_quantity(jsonobject.getString("f_quantity"));
                         food.setFood_desc(jsonobject.getString("f_description"));
                         food.setFood_category(categoryTitle);
                         food.setFood_price(jsonobject.getString("f_price"));
