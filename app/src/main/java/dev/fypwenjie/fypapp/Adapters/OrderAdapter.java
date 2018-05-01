@@ -6,12 +6,10 @@ package dev.fypwenjie.fypapp.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -52,8 +50,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(final OrderViewHolder holder, int position) {
         final Cart carts = cart.get(position);
 
-        holder.store_title.setText(carts.getFood_name() + " Quantity: " + carts.getQuantity());
-        holder.store_category.setText("RM " + carts.getPrice());
+        holder.food_title.setText(carts.getFood_name());
+        holder.food_price.setText("RM " + carts.getPrice());
+        holder.food_quantity.setText(carts.getQuantity());
 
     }
 
@@ -63,20 +62,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView store_title;
-        TextView store_category;
-        LinearLayout store_container;
-        ImageView store_Img;
+        TextView food_title;
+        TextView food_price;
+        TextView food_quantity;
+        LinearLayout order_wrapper;
 
         public OrderViewHolder(View itemView) {
             super(itemView);
-            store_Img = (ImageView) itemView.findViewById(R.id.image_store);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                store_Img.setImageDrawable(context.getDrawable( R.drawable.no_image));
-            }
-            store_title = (TextView) itemView.findViewById(R.id.title_store);
-            store_container = (LinearLayout) itemView.findViewById(R.id.item_store);
-            store_category = (TextView) itemView.findViewById(R.id.title_category);
+
+            food_title = (TextView) itemView.findViewById(R.id.food_title);
+            food_quantity = (TextView) itemView.findViewById(R.id.food_quantity);
+            food_price = (TextView) itemView.findViewById(R.id.food_price);
         }
     }
 

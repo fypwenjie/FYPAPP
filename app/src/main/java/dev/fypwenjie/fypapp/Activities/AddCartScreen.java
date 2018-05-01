@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -100,7 +101,7 @@ public class AddCartScreen extends AppCompatActivity {
                 cart.setRemark (String.valueOf(edit_food_remark.getText()));
                 cart.setToken (token);
 
-                databaseHelper.addCart(cart);
+                Log.i ("DATABASE TEST" , String.valueOf(databaseHelper.addCart(cart)));
 
                 showConfirmDialog(AddCartScreen.this,"Add Cart Success","Want to continue order? ","Yes", "Checkout");
             }
@@ -145,6 +146,7 @@ public class AddCartScreen extends AppCompatActivity {
         });
         backDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
                 Intent intent = new Intent( AddCartScreen.this,OrderScreen.class);
                 startActivity(intent);
             }

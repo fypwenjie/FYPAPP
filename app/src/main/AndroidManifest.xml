@@ -34,7 +34,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.fypwenjie.fypapp.Activities.MainActivity" />
         </activity>
-
         <activity android:name=".Activities.QrScanner" />
         <activity
             android:name=".Activities.ValidateFoodScreen"
@@ -43,7 +42,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.fypwenjie.fypapp.Activities.MainActivity" />
         </activity>
-        <activity android:name=".Activities.OrderScreen" />
+        <activity
+            android:name=".Activities.OrderScreen"
+            android:label="Checkout"
+            android:parentActivityName=".Activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.fypwenjie.fypapp.Activities.MainActivity" />
+        </activity>
         <activity
             android:name=".Activities.AddCartScreen"
             android:label="Add to cart"
@@ -62,6 +68,13 @@
         </activity>
         <activity
             android:name=".Activities.FoodMenuScreen"
+            android:parentActivityName=".Activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.fypwenjie.fypapp.Activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Activities.PromotionScreen"
             android:parentActivityName=".Activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

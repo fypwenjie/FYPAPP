@@ -14,7 +14,7 @@ public class Account  {
     public static final String COLUMN_DISPLAY_NAME = "c_name";
     public static final String COLUMN_EMAIL = "c_email";
     public static final String COLUMN_CONTACT = "c_contact_no";
-    public static final String COLUMN_TOKEN = "c_contact_no";
+    public static final String COLUMN_TOKEN = "c_token";
     public static final String COLUMN_STATUS = "c_status";
     public static final String COLUMN_CREATETIME = "c_createtime";
 
@@ -35,7 +35,8 @@ public class Account  {
         this.acc_token = acc_token;
         this.acc_status = acc_status;
     }
-
+    public Account() {
+    }
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + "("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"

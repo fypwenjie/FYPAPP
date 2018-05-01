@@ -11,10 +11,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
+
+import java.io.UnsupportedEncodingException;
 
 import dev.fypwenjie.fypapp.R;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -97,12 +100,41 @@ public class QrScanner extends Activity implements ZXingScannerView.ResultHandle
         AlertDialog alert1 = builder.create();
         alert1.show();
 
-        mScannerView.stopCamera();           // Stop camera on pause
-        Intent i = new Intent(this, ValidateFoodScreen.class);
+        mScannerView.stopCamera();// Stop camera on pause
+
+        String result = rawResult.getText();
+
+
+        try {
+
+            byte[] data = Base64.decode(result, Base64.DEFAULT);
+            String text = new String(data, "UTF-8");
+
+            String[] parts = text.split("!@!@");
+            String id = parts[0];
+
+            Log.i("Promotion QR Code", id);
+
+            if (id != null && id != "0") {
+                Intent i = new Intent(this, PromotionScreen.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.putExtra("promotion_id", id);
+                startActivity(i);
+            }
+// Receiving side
+
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+// Receiving side
+
+       /* Intent i = new Intent(this, ValidateFoodScreen.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.putExtra("CouponCode", rawResult.getText());
-        i.putExtra("UserID", "8");
-        startActivity(i);
+        i.putExtra("promotion", rawResult.getText());
+        startActivity(i);*/
         // If you would like to resume scanning, call this method below:
         // mScannerView.resumeCameraPreview(this);
     }

@@ -7,29 +7,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="dev.fypwenjie.fypapp.Activities.OrderScreen">
+
     <include
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/order_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingBottom="60dp"
+        android:layout_below="@+id/app_bar">
 
-    </android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/order_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/app_bar"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/total_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@+id/order_list"
+                android:orientation="horizontal"
+                android:padding="30px"
+                android:weightSum="100">
+
+                <LinearLayout
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:orientation="vertical"
+                    android:paddingRight="20px">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:maxLines="1"
+                        android:text="Total"
+                        android:textAlignment="center"
+                        android:textColor="#646464"
+
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:orientation="vertical"
+                    android:paddingRight="20px">
+
+                    <TextView
+                        android:id="@+id/total_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:maxLines="1"
+                        android:text="RM 399"
+                        android:textAlignment="viewStart"
+                        android:textColor="#646464"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <Button
+        android:id="@+id/btn_checkout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_checkout"
-        android:background="@android:color/holo_green_light"
-        android:text="ADD TO CART"
-        android:padding="10dp"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_green_light"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:text="Place order"
         android:textColor="@android:color/white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar"
+        android:gravity="center"
+        android:id="@+id/no_record"
+        android:text="No Order Yet!"
+        ></TextView>
 </RelativeLayout>

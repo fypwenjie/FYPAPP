@@ -44,7 +44,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + Cart.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + Account.TABLE_NAME);
 
         // Create tables again
         onCreate(db);
@@ -74,11 +73,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         */return null;
     }
 
-    public ArrayList<Cart> getCarts(String token) {
+    public ArrayList<Cart> getCarts() {
         ArrayList<Cart> carts = new ArrayList<Cart>();
 
         // Select All Query
-        String selectQuery = "SELECT * FROM " + Cart.TABLE_NAME +   " WHERE c_token = '1' ORDER BY " + Cart.COLUMN_CREATETIME + " DESC";                ;
+        String selectQuery = "SELECT * FROM " + Cart.TABLE_NAME +   "  ORDER BY " + Cart.COLUMN_CREATETIME + " DESC";                ;
         //String selectQuery = "SELECT * FROM " + Cart.TABLE_NAME + " WHERE c_token = "+ token + " ORDER BY " + Cart.COLUMN_CREATETIME + "ASC";                ;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -101,11 +100,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 carts.add(cart);
             } while (cursor.moveToNext());
         }
+
         // close db connection
         db.close();
 
         // return notes list
         return carts;
+    }
+
+    public ArrayList<Account> getAccount() {
+        ArrayList<Account> accounts = new ArrayList<Account>();
+
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + Account.TABLE_NAME +   " LIMIT 1 ";                ;
+        //String selectQuery = "SELECT * FROM " + Cart.TABLE_NAME + " WHERE c_token = "+ token + " ORDER BY " + Cart.COLUMN_CREATETIME + "ASC";                ;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Account account = new Account();
+                account.setAcc_id(cursor.getString(cursor.getColumnIndex(Account.COLUMN_ID)));
+                account.setAcc_username(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
+                account.setAcc_name(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
+                account.setAcc_email(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
+                account.setAcc_contact(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
+                account.setAcc_status(cursor.getInt(cursor.getColumnIndex(Cart.COLUMN_ID)));
+
+
+                accounts.add(account);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+
+        // return notes list
+        return accounts;
     }
 
     public long Login(Account account) {
@@ -120,7 +153,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Account.COLUMN_DISPLAY_NAME , account.getAcc_name());
         values.put(Account.COLUMN_EMAIL , account.getAcc_email());
         values.put(Account.COLUMN_CONTACT , account.getAcc_contact());
-        values.put(Account.COLUMN_TOKEN , account.getAcc_token());
+        //values.put(Account.COLUMN_TOKEN , account.getAcc_token());
         values.put(Account.COLUMN_STATUS , account.getAcc_status());
 
         // insert row
@@ -168,5 +201,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // return newly inserted row id
         return id;
+    }
+
+    public void remove_cart(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM " + Cart.TABLE_NAME);
+    }
+
+    public void logout(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM " + Account.TABLE_NAME);
     }
 }

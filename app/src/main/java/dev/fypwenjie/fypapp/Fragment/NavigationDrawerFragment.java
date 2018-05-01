@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import dev.fypwenjie.fypapp.Activities.LoginScreen;
+import dev.fypwenjie.fypapp.Activities.MainActivity;
 import dev.fypwenjie.fypapp.Activities.OrderScreen;
 import dev.fypwenjie.fypapp.Activities.QrScanner;
+import dev.fypwenjie.fypapp.DatabaseHelper;
+import dev.fypwenjie.fypapp.Domain.Account;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
 
@@ -44,8 +46,10 @@ public class NavigationDrawerFragment extends Fragment {
     Store store = new Store();
     ProgressDialog dialog;
     String TAG = "Response";
+    DatabaseHelper databaseHelper;
     RecyclerView newCategory_list;
-    TextView qr_scanner, login, txtImgName, txtCustName, txtCustEmail, Cart;
+    TextView qr_scanner, login,logout, txtImgName, txtCustName, txtCustEmail, Cart;
+    ArrayList<Account> account = new ArrayList<Account>();
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private RelativeLayout drawer_user_profile;
@@ -100,6 +104,15 @@ public class NavigationDrawerFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        logout = (TextView) view.findViewById(R.id.btn_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseHelper.logout();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
         Cart = (TextView) view.findViewById(R.id.Cart);
         Cart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,25 +126,32 @@ public class NavigationDrawerFragment extends Fragment {
         logout_layout = (LinearLayout) view.findViewById(R.id.logout_layout);
         txtCustEmail = (TextView) view.findViewById(R.id.txtCustEmail);
         txtCustName = (TextView) view.findViewById(R.id.txtCustName);
-        SharedPreferences prefs = this.getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        databaseHelper = new DatabaseHelper(getActivity());
+        account = databaseHelper.getAccount();
 
-        String cust_user_id = prefs.getString("UserID", "");
-        String cust_last_name = prefs.getString("UserLastName", "");
-        String cust_first_name = prefs.getString("UserFirstName", "");
-        String cust_email = prefs.getString("Email", "");
-        Log.i("restoredText UserID", cust_user_id);
-
-        if (cust_user_id.equals("")) {
-            drawer_user_profile.setVisibility(View.GONE);
-            logout_layout.setVisibility(View.GONE);
-            login.setVisibility(View.VISIBLE);
-        } else {
+        if(account.size()> 0){
             login.setVisibility(View.GONE);
+            logout.setVisibility(View.VISIBLE);
+            drawer_user_profile.setVisibility(View.VISIBLE);
+           // txtImgName.setText((cust_first_name != null && !cust_first_name.isEmpty()) ? String.valueOf(cust_first_name.charAt(0)) : "");
+            //txtCustEmail.setText((cust_email != null && !cust_email.isEmpty()) ? String.valueOf(account.getAcc_email) : "");
+            //txtCustName.setText((cust_first_name != null && cust_last_name != null) ? String.valueOf(cust_first_name + " " + cust_last_name) : "");
+        }else {
+            drawer_user_profile.setVisibility(View.GONE);
+            login.setVisibility(View.VISIBLE);
+            logout.setVisibility(View.GONE);
+        }
+
+
+
+
+
+        /*    login.setVisibility(View.GONE);
             logout_layout.setVisibility(View.VISIBLE);
             drawer_user_profile.setVisibility(View.VISIBLE);
-            txtCustEmail.setText((cust_email != null && !cust_email.isEmpty()) ? String.valueOf(cust_email) : "");
-            txtCustName.setText((cust_first_name != null && cust_last_name != null) ? String.valueOf(cust_first_name + " " + cust_last_name) : "");
-        }
+            txtCustEmail.setText("testing@gmail.com");
+            txtCustName.setText("Testing boy");
+*/
 
         return view;
     }

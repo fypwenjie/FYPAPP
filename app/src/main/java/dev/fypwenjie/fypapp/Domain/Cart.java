@@ -28,6 +28,7 @@ public class Cart{
     private String Token;
     private String Status;
     private String Createtime;
+    private Double Total_price;
 
     // Create table SQL query
     public static final String CREATE_TABLE =
@@ -47,7 +48,7 @@ public class Cart{
     public Cart() {
     }
 
-    public Cart(String Cart_id, String User_id, String Food_id,String Food_name, String Quantity, String Price, String Remark, String Token, String Status, String Createtime) {
+    public Cart(String Cart_id, String User_id, String Food_id,String Food_name, String Quantity, String Price, String Remark, String Token, String Status, String Createtime, Double total_price) {
         this.Cart_id = Cart_id;
         this.User_id = User_id;
         this.Food_id = Food_id;
@@ -58,6 +59,15 @@ public class Cart{
         this.Token = Token;
         this.Status = Status;
         this.Createtime = Createtime;
+        this.Total_price = total_price;
+    }
+
+    public Double getTotal_price() {
+        return Total_price;
+    }
+
+    public void setTotal_price(Double total_price) {
+        Total_price = total_price;
     }
 
     public String getFood_name() {

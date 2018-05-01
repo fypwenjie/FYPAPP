@@ -8,7 +8,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,8 +42,9 @@ public class LoginScreen extends AppCompatActivity {
     String[] arr_custFields;
     Map<String, String> arr_custInfo = new HashMap<>();
     EditText et_email, et_password;
+    TextView link_signup;
     String TAG = "Response";
-    private static final String LOGIN_URL = "https://fyp-wenjie.000webhostapp.com/customer/login";
+    private static final String LOGIN_URL = "https://fyp-wenjie.000webhostapp.com/customer/cust_login";
     private static final String KEY_USERNAME = "login_username";
     private static final String KEY_LOGINPASS = "login_password";
     private static final String KEY_FOOD_SID = "food_store_id";
@@ -52,7 +56,14 @@ public class LoginScreen extends AppCompatActivity {
 
         Resources res = getResources();
         arr_custFields = res.getStringArray(R.array.cust_info);
-
+        link_signup = (TextView) findViewById(R.id.link_signup);
+        link_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://fyp-wenjie.000webhostapp.com/customer/register"));
+                startActivity(i);
+            }
+        });
         et_email = (EditText) findViewById(R.id.input_email);
         et_password = (EditText) findViewById(R.id.input_password);
         btn_get = (Button) findViewById(R.id.btn_login);
@@ -61,10 +72,10 @@ public class LoginScreen extends AppCompatActivity {
             public void onClick(View view) {
                 email = et_email.getText().toString();
                 password = et_password.getText().toString();
-
+                new Login(email,password).execute();
             }
         });
-        new Login(email,password).execute();
+
     }
 
     public class Login extends AsyncTask<String, Void, String> {
@@ -97,12 +108,12 @@ public class LoginScreen extends AppCompatActivity {
                 if (jsonArray != null) {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonobject = jsonArray.getJSONObject(i);
-                        account.setAcc_id("");
-                        account.setAcc_username("");
-                        account.setAcc_name("");
-                        account.setAcc_email("");
-                        account.setAcc_contact("");
-                        account.setAcc_status(0);
+                        account.setAcc_id(jsonobject.getString("id"));
+                        account.setAcc_username(jsonobject.getString("c_username"));
+                        account.setAcc_name(jsonobject.getString("c_display_name"));
+                        account.setAcc_email(jsonobject.getString("c_email"));
+                        account.setAcc_contact(jsonobject.getString("c_contact_no"));
+                        account.setAcc_status(jsonobject.getInt("c_status"));
 
                         databaseHelper.Login(account);
                     }
