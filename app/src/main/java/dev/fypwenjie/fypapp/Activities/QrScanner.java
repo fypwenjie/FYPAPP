@@ -121,8 +121,6 @@ public class QrScanner extends Activity implements ZXingScannerView.ResultHandle
                 i.putExtra("promotion_id", id);
                 startActivity(i);
             }
-// Receiving side
-
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

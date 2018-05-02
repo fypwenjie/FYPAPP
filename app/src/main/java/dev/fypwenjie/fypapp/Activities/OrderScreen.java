@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,7 @@ public class OrderScreen extends AppCompatActivity {
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        cust_id = db.getCustID();
         order_list = (RecyclerView) findViewById(R.id.order_list);
         order_list.setLayoutManager(new GridLayoutManager(OrderScreen.this, 1));
         order_list.setNestedScrollingEnabled(false);
@@ -68,15 +69,18 @@ public class OrderScreen extends AppCompatActivity {
         btn_checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(cust_id != "") {
 
-                Gson gson = new Gson();
-                String cartJson = gson.toJson(carts);
-                Log.i("GSON",cartJson);
-                new Checkout(cartJson, totalPrice, cust_id).execute();
+                    Gson gson = new Gson();
+                    String cartJson = gson.toJson(carts);
+                    Log.i("GSON",cartJson);
+                    new Checkout(cartJson, totalPrice, cust_id).execute();
+                }else {
+                    Intent i = new Intent(OrderScreen.this, LoginScreen.class);
+                    OrderScreen.this.startActivity(i);
+                }
             }
         });
-
-        cust_id = "1";
 
         totalPrice =  String.format(Locale.US, "%.2f",  grandTotal (db.getCarts()));
         txt_total.setText("RM " + totalPrice );

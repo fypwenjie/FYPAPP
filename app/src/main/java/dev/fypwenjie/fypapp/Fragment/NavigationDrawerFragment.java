@@ -111,6 +111,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 databaseHelper.logout();
+                databaseHelper.remove_cart();
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
@@ -130,7 +131,9 @@ public class NavigationDrawerFragment extends Fragment {
         txtCustName = (TextView) view.findViewById(R.id.txtCustName);
         databaseHelper = new DatabaseHelper(getActivity());
         txt_cart_qty = (TextView) view.findViewById(R.id.cart_qty);
-
+        txtImgName = (TextView) view.findViewById(R.id.txtImgName);
+        txtCustName = (TextView) view.findViewById(R.id.txtCustName);
+        txtCustEmail = (TextView) view.findViewById(R.id.txtCustEmail);
         cart = databaseHelper.getCarts();
 
         if(cart.size() > 0){

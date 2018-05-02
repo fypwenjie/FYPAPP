@@ -123,11 +123,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Account account = new Account();
                 account.setAcc_id(cursor.getString(cursor.getColumnIndex(Account.COLUMN_ID)));
-                account.setAcc_username(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
-                account.setAcc_name(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
-                account.setAcc_email(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
-                account.setAcc_contact(cursor.getString(cursor.getColumnIndex(Cart.COLUMN_ID)));
-                account.setAcc_status(cursor.getInt(cursor.getColumnIndex(Cart.COLUMN_ID)));
+                account.setAcc_username(cursor.getString(cursor.getColumnIndex(Account.COLUMN_USERNAME)));
+                account.setAcc_name(cursor.getString(cursor.getColumnIndex(Account.COLUMN_DISPLAY_NAME)));
+                account.setAcc_email(cursor.getString(cursor.getColumnIndex(Account.COLUMN_EMAIL)));
+                account.setAcc_contact(cursor.getString(cursor.getColumnIndex(Account.COLUMN_CONTACT)));
+                account.setAcc_status(cursor.getInt(cursor.getColumnIndex(Account.COLUMN_STATUS)));
 
 
                 accounts.add(account);
@@ -168,27 +168,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public String getUsername() {
-        String query = "SELECT c_name FROM " + Account.TABLE_NAME;
+        String query = "SELECT * FROM " + Account.TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
+        String name = "";
+        if (cursor.moveToFirst()) {
+            do {
+                name = cursor.getString(cursor.getColumnIndex(Account.COLUMN_DISPLAY_NAME));
+            } while (cursor.moveToNext());
+        }
 
-        String name = cursor.getString( cursor.getColumnIndex("c_name") );
         cursor.close();
 
-        // return count
+
         return name;
     }
 
     public String getCustEmail() {
-        String query = "SELECT c_email FROM " + Account.TABLE_NAME;
+        String query = "SELECT * FROM " + Account.TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
+        String email = "";
+        if (cursor.moveToFirst()) {
+            do {
+                 email = cursor.getString(cursor.getColumnIndex(Account.COLUMN_EMAIL));
+            } while (cursor.moveToNext());
+        }
 
-        String email = cursor.getString( cursor.getColumnIndex("c_email") );
         cursor.close();
 
         // return count
         return email;
+    }
+
+    public String getCustID() {
+        String query = "SELECT * FROM " + Account.TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String id = "";
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getString(cursor.getColumnIndex("c_id"));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        // return count
+        return id;
     }
 
     public int getNotesCount() {

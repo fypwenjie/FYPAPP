@@ -80,7 +80,7 @@ public class PromotionScreen extends AppCompatActivity implements AbsListView.On
                 .inflate(R.layout.listview_header, listView, false);
         mContainerHeader = headerView.findViewById(R.id.container);
         listView.addHeaderView(headerView);
-
+        categoryTitle = "Promotion";
         txt_store_name = headerView.findViewById(R.id.txt_store_name);
         txt_store_name.setText(categoryTitle);
 
