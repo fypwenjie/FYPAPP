@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -104,25 +103,23 @@ public class LoginScreen extends AppCompatActivity {
             super.onPostExecute(json);
 
             try {
-                JSONArray jsonArray = new JSONArray(json);
-                if (jsonArray != null) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonobject = jsonArray.getJSONObject(i);
-                        account.setAcc_id(jsonobject.getString("id"));
-                        account.setAcc_username(jsonobject.getString("c_username"));
-                        account.setAcc_name(jsonobject.getString("c_display_name"));
-                        account.setAcc_email(jsonobject.getString("c_email"));
-                        account.setAcc_contact(jsonobject.getString("c_contact_no"));
-                        account.setAcc_status(jsonobject.getInt("c_status"));
+                JSONObject responeJsonObject = new JSONObject(json);
+                Log.i("Login Array", String.valueOf(responeJsonObject));
+                if (responeJsonObject != null) {
 
-                        databaseHelper.Login(account);
-                    }
+                    account.setAcc_id(String.valueOf( responeJsonObject.getInt("id")));
+                    account.setAcc_username(responeJsonObject.getString("c_username"));
+                    account.setAcc_name(responeJsonObject.getString("c_display_name"));
+                    account.setAcc_email(responeJsonObject.getString("c_email"));
+                    account.setAcc_contact(responeJsonObject.getString("c_contact_no"));
+                    account.setAcc_status(responeJsonObject.getInt("c_status"));
+
+                    databaseHelper.Login(account);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException e1) {
+                e1.printStackTrace();
             }
         }
-
         @Override
         protected String doInBackground(String... strings) {
             HashMap<String, String> information = new HashMap<>();

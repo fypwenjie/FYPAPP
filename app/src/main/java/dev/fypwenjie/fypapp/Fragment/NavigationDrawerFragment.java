@@ -26,6 +26,7 @@ import dev.fypwenjie.fypapp.Activities.OrderScreen;
 import dev.fypwenjie.fypapp.Activities.QrScanner;
 import dev.fypwenjie.fypapp.DatabaseHelper;
 import dev.fypwenjie.fypapp.Domain.Account;
+import dev.fypwenjie.fypapp.Domain.Cart;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
 
@@ -48,8 +49,9 @@ public class NavigationDrawerFragment extends Fragment {
     String TAG = "Response";
     DatabaseHelper databaseHelper;
     RecyclerView newCategory_list;
-    TextView qr_scanner, login,logout, txtImgName, txtCustName, txtCustEmail, Cart;
+    TextView qr_scanner, login,logout, txt_cart_qty,txtImgName, txtCustName, txtCustEmail, Cart;
     ArrayList<Account> account = new ArrayList<Account>();
+    ArrayList<Cart> cart = new ArrayList<Cart>();
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private RelativeLayout drawer_user_profile;
@@ -127,6 +129,16 @@ public class NavigationDrawerFragment extends Fragment {
         txtCustEmail = (TextView) view.findViewById(R.id.txtCustEmail);
         txtCustName = (TextView) view.findViewById(R.id.txtCustName);
         databaseHelper = new DatabaseHelper(getActivity());
+        txt_cart_qty = (TextView) view.findViewById(R.id.cart_qty);
+
+        cart = databaseHelper.getCarts();
+
+        if(cart.size() > 0){
+            txt_cart_qty.setText(String.valueOf( cart.size()));
+        }else {
+            txt_cart_qty.setText("");
+        }
+
         account = databaseHelper.getAccount();
 
         if(account.size()> 0){
