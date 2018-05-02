@@ -10,9 +10,10 @@ public class Food {
     public String Food_desc;
     public String Food_banner;
     public String Food_price;
+    public String Food_discount;
     public String Food_category;
 
-    public Food(String Food_id, String Food_name,String Food_quantity,String Food_desc, String Food_banner, String Food_price, String Food_category) {
+    public Food(String Food_id, String Food_name,String Food_quantity,String Food_desc, String Food_banner, String Food_price, String Food_discount , String Food_category) {
 
         this.Food_id = Food_id;
         this.Food_name = Food_name;
@@ -20,6 +21,7 @@ public class Food {
         this.Food_desc = Food_desc;
         this.Food_banner = Food_banner;
         this.Food_price = Food_price;
+        this.Food_discount = Food_discount;
         this.Food_category = Food_category;
     }
 
@@ -34,9 +36,18 @@ public class Food {
                 this.Food_desc,
                 this.Food_banner,
                 this.Food_price,
+                this.Food_discount,
                 this.Food_category
         );
         return tmp;
+    }
+
+    public String getFood_discount() {
+        return Food_discount;
+    }
+
+    public void setFood_discount(String food_discount) {
+        Food_discount = food_discount;
     }
 
     public String getFood_quantity() {

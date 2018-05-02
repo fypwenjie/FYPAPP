@@ -331,4 +331,10 @@ public class MainActivity extends AppCompatActivity implements BaseSliderView.On
             return rh.sendPostRequest(GET_PROMOTION_URL, information);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
+    }
 }

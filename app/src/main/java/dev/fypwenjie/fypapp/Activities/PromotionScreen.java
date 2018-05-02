@@ -222,6 +222,7 @@ public class PromotionScreen extends AppCompatActivity implements AbsListView.On
                         food.setFood_desc(jsonobject.getString("f_description"));
                         food.setFood_category(categoryTitle);
                         food.setFood_price(jsonobject.getString("f_price"));
+                        food.setFood_discount(jsonobject.getString("p_amount"));
                         food.setFood_banner(jsonobject.getString("f_banner"));
 
                         foods.add(food.copy());

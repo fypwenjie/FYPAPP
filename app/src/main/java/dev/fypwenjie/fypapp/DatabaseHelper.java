@@ -218,6 +218,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    public String getCQty(String fid) {
+        String query = "SELECT * FROM " + Cart.TABLE_NAME + " WHERE c_fid = '" + fid + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String qty = "";
+        if (cursor.moveToFirst()) {
+            do {
+                qty = cursor.getString(cursor.getColumnIndex("c_quantity"));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        // return count
+        return qty;
+    }
+
+    public String getCPrice(String fid) {
+        String query = "SELECT * FROM " + Cart.TABLE_NAME + " WHERE c_fid = '" + fid + "'" ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String price = "";
+        if (cursor.moveToFirst()) {
+            do {
+                price = cursor.getString(cursor.getColumnIndex("c_price"));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        // return count
+        return price;
+    }
+
+    public int getOrderCount(String fid) {
+        String query = "SELECT * FROM " + Cart.TABLE_NAME + " WHERE c_fid = '" + fid + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+
+        // return count
+        return count;
+    }
+
     public int getNotesCount() {
         String countQuery = "SELECT  * FROM " + Cart.TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -265,5 +311,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("DELETE FROM " + Account.TABLE_NAME);
+    }
+
+    public void updateItem(String f_id,String f_quantity, String f_price ){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("UPDATE " + Cart.TABLE_NAME + " SET c_quantity " + " = '" + f_quantity +"' WHERE c_fid='" +f_id  + "'");
+        db.execSQL("UPDATE " + Cart.TABLE_NAME + " SET c_price " + " = '" + f_price +"' WHERE c_fid='" +f_id  + "'");
     }
 }

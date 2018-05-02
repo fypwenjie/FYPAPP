@@ -92,17 +92,24 @@ public class AddCartScreen extends AppCompatActivity {
         btn_add_cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int cart_count = databaseHelper.getOrderCount(food_id);
+                if (cart_count > 0) {
+                    int food_quantity =  Integer.parseInt(databaseHelper.getCQty(food_id)) + np_food_quantity.getValue();
+                    double food_price = Double.parseDouble(databaseHelper.getCPrice(food_id)) + Double.parseDouble(display_food_price) ;
 
-                cart.setUser_id(user_id);
-                cart.setFood_id(food_id);
-                cart.setFood_name(food_name);
-                cart.setQuantity (String.valueOf(np_food_quantity.getValue()));
-                cart.setPrice (display_food_price);
-                cart.setRemark (String.valueOf(edit_food_remark.getText()));
-                cart.setToken (token);
+                    databaseHelper.updateItem(food_id,String.valueOf(food_quantity),String.format(Locale.US , "%.2f" , food_price));
 
-                Log.i ("DATABASE TEST" , String.valueOf(databaseHelper.addCart(cart)));
+                }else {
+                    cart.setUser_id(user_id);
+                    cart.setFood_id(food_id);
+                    cart.setFood_name(food_name);
+                    cart.setQuantity (String.valueOf(np_food_quantity.getValue()));
+                    cart.setPrice (display_food_price);
+                    cart.setRemark (String.valueOf(edit_food_remark.getText()));
+                    cart.setToken (token);
 
+                    Log.i ("DATABASE TEST" , String.valueOf(databaseHelper.addCart(cart)));
+                }
                 showConfirmDialog(AddCartScreen.this,"Add Cart Success","Want to continue order? ","Yes", "Checkout");
             }
         });

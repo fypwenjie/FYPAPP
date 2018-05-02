@@ -77,6 +77,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 Intent i = new Intent(context, FoodMenuScreen.class);
                 i.putExtra("category_name", categories.getCategory_name());
                 i.putExtra("category_id", categories.getCategory_id());
+                i.putExtra("category_banner", categories.getCategory_banner());
                 context.startActivity(i);
             }
         });

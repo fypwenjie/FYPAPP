@@ -7,6 +7,7 @@ package dev.fypwenjie.fypapp.Activities;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,8 +23,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +42,7 @@ import dev.fypwenjie.fypapp.Domain.Food;
 import dev.fypwenjie.fypapp.Domain.Store;
 import dev.fypwenjie.fypapp.R;
 import dev.fypwenjie.fypapp.RequestHandler;
+import dev.fypwenjie.fypapp.Util.GlobalValue;
 
 
 public class FoodMenuScreen extends AppCompatActivity implements AbsListView.OnScrollListener {
@@ -45,7 +51,8 @@ public class FoodMenuScreen extends AppCompatActivity implements AbsListView.OnS
     ArrayList<Store> stores = new ArrayList<Store>();
     Food food = new Food();
     Store store = new Store();
-    String categoryTitle;
+    String categoryTitle, categoryBanner;
+    ImageView img_categorybanner;
     ListView listView;
     String category_id;
     ProgressDialog dialog;
@@ -66,6 +73,7 @@ public class FoodMenuScreen extends AppCompatActivity implements AbsListView.OnS
         setContentView(R.layout.activity_store_screen);
 
         categoryTitle = getIntent().getStringExtra("category_name");
+        categoryBanner = getIntent().getStringExtra("category_banner");
         category_id = getIntent().getStringExtra("category_id");
 
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -84,6 +92,24 @@ public class FoodMenuScreen extends AppCompatActivity implements AbsListView.OnS
 
         txt_store_name = headerView.findViewById(R.id.txt_store_name);
         txt_store_name.setText(categoryTitle);
+
+        Log.i("categorybanner", categoryBanner);
+
+        img_categorybanner = headerView.findViewById(R.id.img_store);
+        if (!categoryBanner.equals("") || !categoryBanner.equals("null")){
+            ImageLoader imageLoader = ImageLoader.getInstance();
+
+            imageLoader.loadImage( GlobalValue.Domain_name + categoryBanner, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    // Do whatever you want with Bitmap
+                    img_categorybanner.setImageBitmap(loadedImage);
+                    //Bitmap.createScaledBitmap(loadedImage,holder.store_Img.getMaxWidth(),holder.store_Img.getMaxHeight(),false)
+                }
+            });
+        }
+
+
 
         txt_store_cat = headerView.findViewById(R.id.txt_store_cat);
        // txt_store_cat.setText(getIntent().getStringExtra("store_cat"));
@@ -223,6 +249,7 @@ public class FoodMenuScreen extends AppCompatActivity implements AbsListView.OnS
                         food.setFood_desc(jsonobject.getString("f_description"));
                         food.setFood_category(categoryTitle);
                         food.setFood_price(jsonobject.getString("f_price"));
+                        food.setFood_discount(jsonobject.getString("p_amount"));
                         food.setFood_banner(jsonobject.getString("f_banner"));
 
                         foods.add(food.copy());
