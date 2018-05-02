@@ -157,13 +157,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Account.COLUMN_STATUS , account.getAcc_status());
 
         // insert row
-        long id = db.insert(Cart.TABLE_NAME, null, values);
+        long id = db.insert(Account.TABLE_NAME, null, values);
 
         // close db connection
         db.close();
 
         // return newly inserted row id
         return id;
+    }
+
+
+    public String getUsername() {
+        String query = "SELECT c_name FROM " + Account.TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        String name = cursor.getString( cursor.getColumnIndex("c_name") );
+        cursor.close();
+
+        // return count
+        return name;
+    }
+
+    public String getCustEmail() {
+        String query = "SELECT c_email FROM " + Account.TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        String email = cursor.getString( cursor.getColumnIndex("c_email") );
+        cursor.close();
+
+        // return count
+        return email;
     }
 
     public int getNotesCount() {

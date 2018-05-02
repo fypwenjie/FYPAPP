@@ -145,9 +145,12 @@ public class NavigationDrawerFragment extends Fragment {
             login.setVisibility(View.GONE);
             logout.setVisibility(View.VISIBLE);
             drawer_user_profile.setVisibility(View.VISIBLE);
-           // txtImgName.setText((cust_first_name != null && !cust_first_name.isEmpty()) ? String.valueOf(cust_first_name.charAt(0)) : "");
-            //txtCustEmail.setText((cust_email != null && !cust_email.isEmpty()) ? String.valueOf(account.getAcc_email) : "");
-            //txtCustName.setText((cust_first_name != null && cust_last_name != null) ? String.valueOf(cust_first_name + " " + cust_last_name) : "");
+            String name = databaseHelper.getUsername();
+            String email = databaseHelper.getCustEmail();
+
+            txtImgName.setText((name != null && !name.isEmpty()) ? String.valueOf(name.charAt(0)) : "");
+            txtCustEmail.setText((email != null && !email.isEmpty()) ? String.valueOf(email) : "");
+            txtCustName.setText((name != null) ? String.valueOf(name) : "");
         }else {
             drawer_user_profile.setVisibility(View.GONE);
             login.setVisibility(View.VISIBLE);

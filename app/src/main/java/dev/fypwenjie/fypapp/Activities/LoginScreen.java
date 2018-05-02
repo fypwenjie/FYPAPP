@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,7 +53,8 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
-
+        account = new Account();
+        databaseHelper = new DatabaseHelper(this);
         Resources res = getResources();
         arr_custFields = res.getStringArray(R.array.cust_info);
         link_signup = (TextView) findViewById(R.id.link_signup);
@@ -103,23 +105,31 @@ public class LoginScreen extends AppCompatActivity {
             super.onPostExecute(json);
 
             try {
-                JSONObject responeJsonObject = new JSONObject(json);
-                Log.i("Login Array", String.valueOf(responeJsonObject));
-                if (responeJsonObject != null) {
+                JSONArray jsonArray = new JSONArray(json);
+                JSONObject studentsJsonArry =  jsonArray.getJSONObject(0);
+                Log.i("Login Array", String.valueOf(studentsJsonArry));
+                Log.i("Login ID",  String.valueOf( studentsJsonArry.get("id")));
 
-                    account.setAcc_id(String.valueOf( responeJsonObject.getInt("id")));
-                    account.setAcc_username(responeJsonObject.getString("c_username"));
-                    account.setAcc_name(responeJsonObject.getString("c_display_name"));
-                    account.setAcc_email(responeJsonObject.getString("c_email"));
-                    account.setAcc_contact(responeJsonObject.getString("c_contact_no"));
-                    account.setAcc_status(responeJsonObject.getInt("c_status"));
+                if (jsonArray != null) {
 
-                    databaseHelper.Login(account);
+                        account.setAcc_id(String.valueOf( studentsJsonArry.get("id")));
+                        account.setAcc_username(String.valueOf( studentsJsonArry.get("c_username")));
+                        account.setAcc_name(String.valueOf(studentsJsonArry.get("c_display_name")));
+                        account.setAcc_email(String.valueOf(studentsJsonArry.get("c_email")));
+                        account.setAcc_contact(String.valueOf(studentsJsonArry.get("c_contact_no")));
+                        account.setAcc_status( Integer.parseInt( String.valueOf(studentsJsonArry.get("c_status"))));
+
+                        databaseHelper.Login(account);
+
                 }
-            } catch (JSONException e1) {
-                e1.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            dialog.cancel();
+            Intent i = new Intent(LoginScreen.this, MainActivity.class);
+            LoginScreen.this.startActivity(i);
         }
+
         @Override
         protected String doInBackground(String... strings) {
             HashMap<String, String> information = new HashMap<>();
